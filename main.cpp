@@ -1,61 +1,63 @@
-//Dakota Crozier & Colin Buchko
-//ENSC 251 ASSINGMENT 
-//
-//The main.cpp file for the program, where the classes will be put to use to read the data from a file of
-//different students and their data, temporarily store it in an object of child student class, which shall be
-//put into a linked list for storage.
+/*
+
+Ensc 251
+Dr Zhenman Fang
+Diego Flores, Ansley Ang
+September 25, 2019
+Lab 2
+main.cpp
+
+This program gathers Domestic or International student information from text files and stores the data into
+a dynamic array of objects (of class DomesticStudent or InternationalStudent). The program asks for user input,
+asking how they want to sort the Students, first choosing domestic or international, then sorting by first name,
+last name, cpga, research score, province, or country. The student information is then displayed on the console.
+
+*/
+
+
+//main.cpp, put your driver code here, 
+//you can manipulate your class objects here
 #include <iostream> //cin and cout
 #include <fstream> //file processing
 #include <sstream> //formatted string processing
 #include <cstdlib> //atof and atoi
-#include "student.hpp" //header files
-#include "domesticStudent.hpp"
-#include "internationalStudent.hpp"
-#include "toeflScore.hpp"
-#include "linkedListStudent.hpp"
-#include <string>
 #include <iomanip>
+#include "student.hpp"
+#include<stdio.h>
 
-using namespace std;
-
-//declare functions to be used in main
-//lab2 array sorting function
-void singleSort(int stu_count1, DomesticStudent *StudentD, char type);
-void singleSort(int stu_count2, InternationalStudent *StudentI, char type);
-
-//linked list functions
-void insertNode(DomesticStudent &Student1, StudentList **domesticHeadNode);
-void insertNode(InternationalStudent &Student1, StudentList **internationalHeadNode);
-void specialDelete(StudentList**headNode, StudentList **tailNode);
-void deleteByName(StudentList**headNode, string firstName, string lastName);
-
-//sorting functions
-void frontBackSplit(StudentList*sourceNode, StudentList**frontRef, StudentList**backRef);
-void mergeSort(StudentList**headRef, char type);
-StudentList * SortedMerge(StudentList*a, StudentList*b, char type);
-
-//linked list manipulation functions
-void tailNodeFinder(StudentList **headNode, StudentList **tailNode);
-void printLinkedList(StudentList**headNode);
-void searchResearchScore(StudentList**headNode, int rScore);
-void searchGPA(StudentList**headNode, float cgpa);
-void searchName(StudentList**headNode, string firstName, string lastName);
-void searchApplicationID(StudentList**headNode, int appID);
-void threshodldPrint(StudentList**headNode, float cgpaThreshold, int researchScoreThreshold);
-
+/*I provide example code here to help you read the input
+ *data from a file, so that you can focus on creating
+ *and manipulating classes and objects
+ */
 
 
 
 int main() {
-	//Intialize head and tail pointer for both domestic and international
 
-	//will be given proper memory address when linked list is created
-	//DOMESTIC STUDENT reading file and outputting
 
-	//opening and checking to see if the file domestic-stu.txt opened and closing the program if opening failed.
+	char sortDom = 'p';
+	char sortInt = 'p';
+
+	typedef Student* studentPtr;
+	typedef DomesticStudent* domesticStudentPtr;
+	typedef InternationalStudent* internationalStudentPtr;
+
+	studentPtr head;
+	studentPtr domHead;
+	studentPtr domTail;
+
+	studentPtr tail;
+	studentPtr intHead;
+	studentPtr intTail;
+
+	domHead = nullptr;
+	domTail = nullptr;
+	intHead = nullptr;
+	intTail = nullptr;
+
+	//Read the domestic-stu.txt file and exit if failed
 	string line;
 	ifstream domesticFile("domestic-stu.txt");
-
 	if (!domesticFile.is_open()) {
 		cout << "Unable to open file domestic-stu.txt" << endl;
 		return -1;
@@ -63,1033 +65,1220 @@ int main() {
 
 	//Read the first line of domestic-stu.txt, which specifies
 	//the file format. And then print it out to the screen
+
 	getline(domesticFile, line);
-	cout << endl << endl;
-	cout << "DOMESTIC STUDENTS" << endl;
-	cout << "File format: " << line << endl << endl;
-
-	//initializing the first student number as 20200000, for the first student. This variable will be used to
-	//assign student numbers in the while loop for reading the fi;e
-	int studentnum = 20200000;
-	StudentList *domesticHeadNode = NULL;
-	StudentList *internationalHeadNode = NULL;
-	StudentList *domesticTailNode = NULL;
-	StudentList *internationalTailNode = NULL;
 
 
+	/*Keep reading the rest of the lines in domestic-stu.txt.
+	 *In the example code here, I will read each data separated
+	 *by a comma, and then print it out to the screen.
+	 *In your lab assignment 1, you should use these read data
+	 *to initialize your DomesticStudent object. Then you can
+	 *use get and set functions to manipulate your object, and
+	 *print the object content to the screen
+	 */
 
-	//for going thru the while loop when reading the file, counting how many entries are made
-	int stu_count1 = 0;
+
+	 // Dynamic array of DomesticStudent 
+
+
+	cout << "------------------------------------------------------------------------------------------------" << endl;
+	cout << setw(15) << left << "First Name" 
+		<< setw(15) << left << "Last Name" 
+		<< setw(15) << left << "Province" 
+		<< setw(10) << left << "CGPA" 
+		<< setw(18) << left << "Research Score" 
+		<< setw(15) << left << "Student Number"  << endl;
+	cout << "------------------------------------------------------------------------------------------------" << endl;
+	int stu_count = 0;
+	int stu_num = 0;
 
 	while (getline(domesticFile, line)) {
-		//process each line, get each field separated by a comma.
-		 //use istringstream to handle it.
-		DomesticStudent fakeStudent;
+		/*process each line, get each field separated by a comma.
+		 *We use istringstream to handle it.
+		 *Note in this example code here, we assume the file format
+		 *is perfect and do NOT handle error cases. We will leave the
+		 *error and exception handling of file format to Lab Assignment 4
+		 */
 		istringstream ss(line);
 
-		//all values read are inputted as strings, declare variables to hold them	
 		string firstName, lastName, province, s_cgpa, s_researchScore;
-		//variables to use once converted to float,for cgpa, and int, for research score 
 		float cgpa;
 		int researchScore;
 
-		//since dynamic array automatically uses default constructor to initialize, use set functions to change data andvoid creating new anonymous objects
 		//get firstName separated by comma
 		getline(ss, firstName, ',');
-		fakeStudent.set_firstname(firstName);
 
 		//get lastName separated by comma
 		getline(ss, lastName, ',');
-		fakeStudent.set_lastname(lastName);
 
 		//get province separated by comma
 		getline(ss, province, ',');
-		fakeStudent.set_province(province);
+
 		//get cpga separated by comma, and convert string to float
 		getline(ss, s_cgpa, ',');
 		cgpa = atof(s_cgpa.c_str());
-		fakeStudent.set_cgpa(cgpa);
+
 		//get researchScore separated by comma, and convert it to int
 		getline(ss, s_researchScore, ',');
 		researchScore = atoi(s_researchScore.c_str());
-		fakeStudent.set_researchscore(researchScore);
-		//setting the application ID
-		fakeStudent.set_appID(studentnum);
-		//use overloaded operator to print out data each time
-		insertNode(fakeStudent, &domesticHeadNode);
-		//incrementing student number counter
-		studentnum++;
+		studentPtr inDom = new DomesticStudent(firstName, lastName, cgpa, researchScore, stu_num + 20200000, province);
 
-		//incrementing while loop counter
-		stu_count1++;
+
+
+		insert((search(domHead, inDom, sortDom)), domHead, domTail, inDom, sortDom);
+
+		stu_count++;
+		stu_num++;
 	}
 
-	//closing the file
+	studentPtr tempdom;
+	tempdom = domHead;
+	while (tempdom != nullptr)
+	{
+		cout << *tempdom;
+		tempdom = tempdom->get_link();
+	}
+
+
+
+	//close your file
 	domesticFile.close();
 
-	//sort domestic linked list
-	mergeSort(&domesticHeadNode, 'R');
+	cout << endl;
 
 
-
-	//set domestic tail node 
-	tailNodeFinder(&domesticHeadNode, &domesticTailNode);
-
-
-	//INTERNATIONAL STUDENT reading file and outputting
-
-	//opening and checking to see if the file international-stu.txt opened, if not then closing the program
-	ifstream InternationalFile("international-stu.txt");
-
-	if (!InternationalFile.is_open()) {
+	//Read the domestic-stu.txt file and exit if failed
+	ifstream internationalFile("international-stu.txt");
+	if (!internationalFile.is_open()) {
 		cout << "Unable to open file international-stu.txt" << endl;
 		return -1;
 	}
 
-	//Read the first line of international-stu.txt, which specifies
+
+	//Read the first line of domestic-stu.txt, which specifies
 	//the file format. And then print it out to the screen
-	getline(InternationalFile, line);
-	cout << endl << endl << "INTERNATIONAL STUDENTS" << endl;
-	cout << "File format: " << line << endl << endl;
+	getline(internationalFile, line);
 
 
 
-	//while loop for reading the file and putting the data into the International object
-	//for international student file reading, to keep track of how may entries are made
-	int stu_count2 = 0;
+	stu_count = 0;
+	cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
+	cout << setw(15) << left << "First Name" 
+		<< setw(15) << left << "Last Name" 
+		<< setw(15) << left << "Country" 
+		<< setw(10) << left << "CGPA" 
+		<< setw(18) << left << "Research Score" 
+		<< setw(18) << left << "Student Number" 
+		<< setw(10) << left << "Total" 
+		<< setw(10) << left << "Reading" 
+		<< setw(10) << left << "Listening" 
+		<< setw(10) << left << "Speaking" 
+		<< setw(10) << left << "Writing"  << endl;
+	cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
 
-	while (getline(InternationalFile, line)) {
+	while (getline(internationalFile, line)) {
 
-		//process each line, get each field separated by a comma.
-		 //use istringstream to handle it.
+		/*process each line, get each field separated by a comma.
+		 *We use istringstream to handle it.
+		 *Note in this example code here, we assume the file format
+		 *is perfect and do NOT handle error cases. We will leave the
+		 *error and exception handling of file format to Lab Assignment 4
+		 */
 		istringstream ss(line);
 
-		//all data read as a string, so declare variables to store the strings
-		string firstName, lastName, country, s_cgpa, s_researchScore, s_reading, s_writing, s_speaking, s_listening;
-		//variables to hold float/int values once converted from strings
+		string firstName, lastName, Country, s_cgpa, s_researchScore, s_Reading, s_Listening, s_Speaking, s_Writing;
 		float cgpa;
-		int researchScore, reading, writing, speaking, listening;
-		//temporary student object
-		InternationalStudent fakeStudent;
+		int researchScore;
+		int toeflReading;
+		int toeflListening;
+		int toeflSpeaking;
+		int toeflWriting;
 
-		//since the objects have already been initialized by the default constructor, to avoid creating another anonymous obejct, use the set functions to input data
 		//get firstName separated by comma
 		getline(ss, firstName, ',');
-
-		fakeStudent.set_firstname(firstName);
 
 		//get lastName separated by comma
 		getline(ss, lastName, ',');
 
-		fakeStudent.set_lastname(lastName);
+		//get province separated by comma
+		getline(ss, Country, ',');
 
-		//get country separated by comma
-		getline(ss, country, ',');
-
-		fakeStudent.set_country(country);
 		//get cpga separated by comma, and convert string to float
 		getline(ss, s_cgpa, ',');
 		cgpa = atof(s_cgpa.c_str());
 
-		fakeStudent.set_cgpa(cgpa);
 		//get researchScore separated by comma, and convert it to int
 		getline(ss, s_researchScore, ',');
 		researchScore = atoi(s_researchScore.c_str());
 
-		fakeStudent.set_researchscore(researchScore);
-		//setting the application ID of the student
+		//get toefl reading score
+		getline(ss, s_Reading, ',');
+		toeflReading = atoi(s_Reading.c_str());
 
-		fakeStudent.set_appID(studentnum);
-		//get reading, writng, listening and speaking scores and cast to int
-		getline(ss, s_reading, ',');
-		reading = atoi(s_reading.c_str());
+		//get toefl Listening score
+		getline(ss, s_Listening, ',');
+		toeflListening = atoi(s_Listening.c_str());
 
-		getline(ss, s_listening, ',');
-		listening = atoi(s_listening.c_str());
+		//get toefl Speaking score
+		getline(ss, s_Speaking, ',');
+		toeflSpeaking = atoi(s_Speaking.c_str());
 
-		getline(ss, s_speaking, ',');
-		speaking = atoi(s_speaking.c_str());
-
-		getline(ss, s_writing, ',');
-		writing = atoi(s_writing.c_str());
-
-		//setting the individualy toefl scores and the total
-
-		fakeStudent.set_Tread(reading);
-		fakeStudent.set_Tlisten(listening);
-		fakeStudent.set_Twrite(writing);
-		fakeStudent.set_Tspeak(speaking);
-		fakeStudent.set_Ttotal(reading, writing, listening, speaking);
-
-		//output using overloaded output operator
-		//cout << fakeStudent << endl;
-
-		//pass student object to linked list
-		insertNode(fakeStudent, &internationalHeadNode);
+		//get toefl Listening score
+		getline(ss, s_Writing, ',');
+		toeflWriting = atoi(s_Writing.c_str());
 
 
-		//incrementing student number counter to ensure no 2 students have same number
-		studentnum++;
-		//incrementing loop counter
-		stu_count2++;
-	}
 
-	//closing the file
-	InternationalFile.close();
-
-	//set internatinonal tail node 
-	tailNodeFinder(&internationalHeadNode, &internationalTailNode);
-
-	cout << endl << "Linked lists have been intilialized and are sorted." << endl;
-
-	//lab 3 sorting
-
-	//initialize/reset variables for loop conditions
-	int sorttries = 0;//tries for sorting
-	char linkedSort = 'x';
-	char sortAgain = 'x';
-
-	while (sorttries < 50) {
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-		cout << "Enter 1 to view domestic linked list or 2 to view the international linked list. Otherwise :" << endl;
-		cout << "Insert 'S' to search nodes, 'A' to add a student node, 'D' to delete a student node, 'Z' to delete head and tail node (at the same time!), or 'M' to merge linked lists." << endl;
-		cin >> linkedSort;//TAKE USER INPUT
-		if (linkedSort == '1') {
-			mergeSort(&domesticHeadNode, 'R');
-			//formatting the output for reading the file, with headers for each category at the top
-			cout << setw(20) << left << "Application ID" << setw(20) << left << "First Name" << setw(20) << left << "Last Name"
-				<< setw(20) << left << "Research Score" << setw(20) << left << "CGPA" << setw(20) << left << "Province" << endl;
-			//print linked list TESTING SORTING
-			printLinkedList(&domesticHeadNode);
-		}
-		if (linkedSort == '2') {
-			mergeSort(&internationalHeadNode, 'R');
-			//formatting the output to have header categories for each member
-			cout << setw(20) << left << "Application ID" << setw(20) << left << "First Name" << setw(20) << left << "Last Name"
-				<< setw(20) << left << "Research Score" << setw(20) << left << "CGPA" << setw(20) << left << "Country"
-				<< setw(10) << left << "TOEFL" << setw(10) << left << "Reading" << setw(10) << left << "Writing"
-				<< setw(10) << left << "Listening" << setw(10) << left << "Speaking" << endl;
-			//print linked list
-			printLinkedList(&internationalHeadNode);
-		}
 
-		if (linkedSort == 'M' || linkedSort == 'm') {
-			break;
-		}
-		else if (linkedSort == 's' || linkedSort == 'S') {
-			char searchType;
-			int inputFail = 1;
-			while (inputFail == 1) {
-				cout << "Insert what you would like to search by, 'C' for cgpa, 'A' for application ID, 'R' for research score, 'N' for first and last name" << endl;
-				cin >> searchType;
-				if (searchType == 'C' || searchType == 'c') {
-					int inputFail = 1;
-					while (inputFail) { //SEARCH BY CGPA 
-						char studentType = 'x';
-						cout << "Enter 'D' for domestic or 'I' for international" << endl;
-						cin >> studentType;
-
-						if (studentType == 'D' || studentType == 'd') {
-							float CGPA;
-							cout << "Input CGPA to search by ";
-							cin >> CGPA;
-							searchGPA(&domesticHeadNode, CGPA);
-						}
-						else if (studentType == 'I' || studentType == 'i') {
-							float CGPA;
-							cout << "Input CGPA to search by ";
-							cin >> CGPA;
-							searchGPA(&internationalHeadNode, CGPA);
-						}
-						else {
-							cout << "Improper student type input, Try again" << endl;
-							continue;
-						}
-
-						inputFail = 0;
-					}
-				}
-				else if (searchType == 'A' || searchType == 'a') { //CODE FOR SEARCHING BY APPLICATION ID
-					int inputFail = 1;
-					while (inputFail) {
-						char studentType = 'x';
-						cout << "Enter 'D' for domestic or 'I' for international" << endl;
-						cin >> studentType;
-
-						if (studentType == 'D' || studentType == 'd') { //domestic student
-							int AppID;
-							cout << "Input Application ID Score to search by: ";
-							cin >> AppID;
-							searchApplicationID(&domesticHeadNode, AppID);
-						}
-						else if (studentType == 'I' || studentType == 'i') { //international
-							int AppID;
-							cout << "Input Application ID Score to search by: ";
-							cin >> AppID;
-							searchApplicationID(&internationalHeadNode, AppID);
-						}
-						else {
-							cout << "Improper student type input, Try again" << endl;
-							continue;
-						}
-
-						inputFail = 0;
-					}
-				}
-				else if (searchType == 'R' || searchType == 'r') {//search by researchScore
-					int inputFail = 1;
-					while (inputFail) {
-						char studentType = 'x';
-						cout << "Enter 'D' for domestic or 'I' for international" << endl;
-						cin >> studentType;
-
-						if (studentType == 'D' || studentType == 'd') {
-							int RScore;
-							cout << "Input Research Score to search by: ";
-							cin >> RScore;
-							searchResearchScore(&domesticHeadNode, RScore);
-						}
-						else if (studentType == 'I' || studentType == 'i') {
-							int RScore;
-							cout << "Input Research Score to search by: ";
-							cin >> RScore;
-							searchResearchScore(&internationalHeadNode, RScore);
-						}
-						else {
-							cout << "Improper student type input, Try again" << endl;
-							continue;
-						}
-
-						inputFail = 0;
-					}
-				}
-				else if (searchType == 'N' || searchType == 'n') { //SEARCH FOR NAME USING STRINGS
-					int inputFail = 1;
-					while (inputFail) {
-						char studentType = 'x';
-						cout << "Enter 'D' for domestic or 'I' for international" << endl;
-						cin >> studentType;
-
-						if (studentType == 'D' || studentType == 'd') { //domestic
-							string firstName, lastName;
-							cout << "Enter new student first name" << endl;
-							cin >> firstName;
-							cout << "Enter new student last name" << endl;
-							cin >> lastName;
-							searchName(&domesticHeadNode, firstName, lastName);
-						}
-						else if (studentType == 'I' || studentType == 'i') { //international
-							string firstName, lastName;
-							cout << "Enter new student first name" << endl;
-							cin >> firstName;
-							cout << "Enter new student last name" << endl;
-							cin >> lastName;
-							searchName(&internationalHeadNode, firstName, lastName);
-						}
-						else {
-							cout << "Improper student type input, Try again" << endl;
-							continue;
-						}
-
-						inputFail = 0;
-					}
-				}
-
-				inputFail = 0;
-			}
-
-		}
-		else if (linkedSort == 'a' || linkedSort == 'A') {
-			//get user input for student info then create new student
-			int inputFail = 1;
-			while (inputFail) {
-				char studentType = 'x';
-				cout << "Enter 'D' for domestic or 'I' for international" << endl;
-				cin >> studentType;
-				if (studentType == 'D' || studentType == 'd') { //DOMESTIC
-
-					string firstName, lastName, province;
-					float cgpa;
-					int researchScore;
-					DomesticStudent fakeStudent;
-
-					cout << "Enter new student first name" << endl; //MISC INFO
-					cin >> firstName;
-					cout << "Enter new student last name" << endl;
-					cin >> lastName;
-					cout << "Enter student province" << endl;
-					cin >> province;
-					cout << "Enter student cgpa" << endl;
-					cin >> cgpa;
-					cout << "Enter student research score" << endl;
-					cin >> researchScore;
-
-					fakeStudent.set_firstname(firstName);
-					fakeStudent.set_lastname(lastName);
-					fakeStudent.set_province(province);
-					fakeStudent.set_cgpa(cgpa);
-					fakeStudent.set_researchscore(researchScore); //FUNCTIONS TO SET INFO IN OBJECT
-					fakeStudent.set_appID(studentnum);
-					insertNode(fakeStudent, &domesticHeadNode);
-					mergeSort(&domesticHeadNode, 'R');
-					printLinkedList(&domesticHeadNode);
-					studentnum++;
-				}
-				else if (studentType == 'I' || studentType == 'i') {
-					string firstName, lastName, country;
-					float cgpa;
-					int researchScore, reading, writing, speaking, listening;
-					InternationalStudent fakeStudent;
-
-					cout << "Enter new student first name" << endl; //SAME AS ABOVE FOR INTERNATIONAL STUDENTS
-					cin >> firstName;
-					cout << "Enter new student last name" << endl;
-					cin >> lastName;
-					cout << "Enter student country" << endl;
-					cin >> country;
-					cout << "Enter student cgpa" << endl;
-					cin >> cgpa;
-					cout << "Enter student research score" << endl;
-					cin >> researchScore;
-					cout << "Enter student TOEFL reading score" << endl;
-					cin >> reading;
-					cout << "Enter student TOEFL listening score" << endl;
-					cin >> listening;
-					cout << "Enter student TOEFL speaking score" << endl;
-					cin >> speaking;
-					cout << "Enter student TOEFL writing score" << endl;
-					cin >> writing;
-
-					fakeStudent.set_firstname(firstName);
-					fakeStudent.set_lastname(lastName);
-					fakeStudent.set_country(country);
-					fakeStudent.set_cgpa(cgpa);
-					fakeStudent.set_researchscore(researchScore);
-					fakeStudent.set_appID(studentnum);
-
-					fakeStudent.set_Tread(reading);
-					fakeStudent.set_Tlisten(listening);
-					fakeStudent.set_Twrite(writing);
-					fakeStudent.set_Tspeak(speaking);
-
-					fakeStudent.set_Ttotal(reading, writing, listening, speaking);
-					insertNode(fakeStudent, &internationalHeadNode);
-					mergeSort(&internationalHeadNode, 'R');
-					printLinkedList(&internationalHeadNode);
-				}
-				else {
-					cout << "Improper student type input, Try again";
-					continue;
-				}
-
-				inputFail = 0;
-			}
-		}
-		else if (linkedSort == 'd' || linkedSort == 'D') {//Delete student node
-			int inputFail = 1;
-			while (inputFail) {
-				char studentType = 'x';
-				cout << "Enter 'D' for domestic or 'I' for international" << endl;
-				cin >> studentType;
-
-				if (studentType == 'D' || studentType == 'd') {
-					string firstName, lastName;
-					cout << "Enter student first name" << endl;
-					cin >> firstName;
-					cout << "Enter student last name" << endl;
-					cin >> lastName;
-
-					deleteByName(&domesticHeadNode, firstName, lastName);
-					mergeSort(&domesticHeadNode, 'R');
-					printLinkedList(&domesticHeadNode);
-				}
-				else if (studentType == 'I' || studentType == 'i') {
-					string firstName, lastName;
-					cout << "Enter student first name" << endl;
-					cin >> firstName;
-					cout << "Enter student last name" << endl;
-					cin >> lastName;
-
-					deleteByName(&internationalHeadNode, firstName, lastName);
-					mergeSort(&internationalHeadNode, 'R');
-					printLinkedList(&internationalHeadNode);
-				}
-				else {
-					cout << "Improper student type input, Try again" << endl;
-					continue;
-				}
-
-				inputFail = 0;
-			}
-		}
-		else if (linkedSort == 'z' || linkedSort == 'Z') { //DELETE NODE FROM LIST
-			int inputFail = 1;
-			while (inputFail) {
-				cout << "Which list would you like to delete the first and last node from, enter 'I' for international or 'D' for domestic." << endl;
-				char studentType = 'x';
-				cin >> studentType;
-				if (studentType == 'D' || studentType == 'd') {
-					tailNodeFinder(&domesticHeadNode, &domesticTailNode);
-					specialDelete(&domesticHeadNode, &domesticTailNode);
-					mergeSort(&domesticHeadNode, 'R');
-					printLinkedList(&domesticHeadNode);
-				}
-				else if (studentType == 'I' || studentType == 'i') {
-					tailNodeFinder(&internationalHeadNode, &internationalTailNode);
-					specialDelete(&internationalHeadNode, &internationalTailNode);
-					mergeSort(&internationalHeadNode, 'R');
-					printLinkedList(&internationalHeadNode);
-				}
-				else {
-					cout << "Improper student type input, Try again" << endl;
-					continue;
-				}
-				inputFail = 0;
-			}
-		}
-
-
-		//allowing option to do multiple sorts at once
-		cout << "Would you like to do something else? Enter Y for YES, and N for NO" << endl;
-		cin >> sortAgain;//choice for sorting multiple times
-
-		if (sortAgain == 'Y' || sortAgain == 'y')
+		// Error Checking for InternationalStudent. If their scores are not high enough, they are dropped from the array
+		if ((toeflListening + toeflReading + toeflWriting + toeflSpeaking) < 93 || toeflReading < 20 || toeflListening < 20 || toeflWriting < 20 || toeflSpeaking < 20)
 		{
-			sorttries++;//update attempts loop and sort again
+
 			continue;
 		}
 
-		else if (sortAgain == 'N' || sortAgain == 'n')
-			break;//stop sorting, just do once
+		studentPtr inInt = new InternationalStudent(firstName, lastName, cgpa, researchScore, stu_num + 20200000, Country, toeflReading, toeflListening, toeflSpeaking, toeflWriting);
+		insert((search(intHead, inInt, sortInt)), intHead, intTail, inInt, sortInt);
 
-		   //otherwise just sort once and not again
+		stu_num++;
+		stu_count++;
+	}
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	studentPtr tempint;
+	tempint = intHead;
+	while (tempint != nullptr)
+	{
+		cout << *tempint;
+		tempint = tempint->get_link();
+	}
+
+	cout << endl;
+
+	int homeChoice = 0;
+	char gotoHome = 'y';
+	// INTERFACE
+	while (gotoHome == 'y' || gotoHome == 'Y') //This while loop is for asking the user if they want to come back to homepage 
+	{
+		gotoHome = 'n';
+		char searchAgain = 'y';
+		char addAnother = 'y';
+		char deleteAnother = 'y';
+		char searchType = 'p';
+		char studType = 'p';
+		int idChoice = 0;
+
+		string firstname = "";
+		string lastname = "";
+
+
+		cout << "Welcome to SFU! What would you like to do today?" << endl;
+
+		cout << "[1] Search for a Student" << endl;
+		cout << "[2] Add a Student" << endl;
+		cout << "[3] Delete a Student" << endl;
+		cout << "[4] Merge Lists" << endl;
+		cout << "[5] Exit Program" << endl;
+
+		cout << "Choice: ";
+		cin >> homeChoice;
+		cout << endl;
+
+		if (homeChoice > 5 || homeChoice <= 0)
+		{
+			cerr << "ERROR: Please select a proper option" << endl;
+			homeChoice = 0;
+			
+			
+			continue;
+		}
+
+		if (homeChoice == 5) // EXIT
+		{
+			break;
+		}
+		else if (homeChoice == 4) // MERGE
+		{
+			break;
+		}
+		else if (homeChoice == 1)
+		{
+			//////////////////////////////////////////////////////////////////////////SEARCHING////////////////////////////////////////////////////////
+			while (searchAgain == 'y' || searchAgain == 'Y')
+			{
+				idChoice = 'p';
+				float cgpaChoice = 0;
+				firstname = "";
+				string lastname = "";
+				cout << "What would you like to search?" << endl; 
+				cout << "[N] Full Name " << endl;
+				cout << "[C] CGPA" << endl << "[R] Research Score " << endl;
+				cout << "[I] Student ID" << endl;
+
+				cout << "Choice: ";
+				cin >> searchType;
+				cout << endl;
+
+				if (searchType != 'n' && searchType != 'N' && searchType != 'c' && searchType != 'C' && searchType != 'r' && searchType != 'R' && searchType != 'I' && searchType != 'i' || cin.peek() != '\n')
+				{
+					cerr << "ERROR: Please select a proper searching category" << endl;
+					searchType = 'p';
+					
+					
+					continue;
+				}
+				// SEARCH FUNCTIONS
+
+				if (searchType == 'I' || searchType == 'i')
+				{
+					cout << "Please enter the ID you would like to find" << endl;
+					cin >> idChoice;
+					searchID(domHead, intHead, idChoice);
+				}
+				else if (searchType == 'c' || searchType == 'C')
+				{
+					cout << "Please enter the CGPA you would like to find" << endl;
+					cin >> cgpaChoice;
+					searchCGPA(domHead, intHead, cgpaChoice);
+				}
+				else if (searchType == 'r' || searchType == 'R')
+				{
+					cout << "Please enter the research score you would like to find" << endl;
+					cin >> idChoice;
+					searchReScore(domHead, intHead, idChoice);
+				}
+				else if (searchType == 'n' || searchType == 'N')
+				{
+					cout << "Please enter the first name you would like to find" << endl;
+					cin >> firstname;
+					cout << endl;
+					cout << "Please enter the last name you would like to find" << endl;
+					cin >> lastname;
+					cout << endl;
+
+					searchName(domHead, intHead, firstname, lastname);
+
+				}
+
+				cout << endl;
+				cout << "Would you like to search again?" << endl;
+				cout << "press 'y' to search again:  ";
+				cin >> searchAgain;
+
+				if (searchAgain != 'y' && searchAgain != 'Y')
+				{
+					break;
+				}
+				else
+				{
+					cout << endl;
+
+					continue;
+				}
+
+			}
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		}
+		else if (homeChoice == 2)
+		{
+			//////////////////////////////////////////////////////////////////////////INSERT NEW STUDENTS////////////////////////////////////////////////////////
+			while (addAnother == 'y' || addAnother == 'Y')
+			{
+				cout << "Pick your student type" << endl;
+				cout << "[D] Domestic" << endl;
+				cout << "[I] International" << endl;
+
+				cout << "Choice: ";
+				cin >> studType;
+				cout << endl;
+
+				if (studType != 'd' && studType != 'D' && studType != 'i' && studType != 'I' || cin.peek() != '\n')
+				{
+					cerr << "ERROR: Please select a proper student type" << endl;
+					studType = 'p';
+					
+					
+					continue;
+				}
+
+				if (studType == 'd' || studType == 'D')
+				{
+					string firstName, lastName, province = "";
+					float cgpa = -1;
+					int researchScore = -1;
+
+
+					cout << "Please enter the student's first name" << endl;
+					cin >> firstName;
+					cout << endl;
+
+					cout << "Please enter the student's last name" << endl;
+					cin >> lastName;
+					cout << endl;
+
+					
+						cout << "Please enter the student's CGPA" << endl;
+						cin >> cgpa;
+						cout << endl;
+						
+					
+
+				
+						cout << "Please enter the student's research score" << endl;
+						cin >> researchScore;
+						cout << endl;
+						
+					
+					
+					
+						cout << "Please enter the student's province" << endl;
+						cin >> province;
+						
+
+						
+						
+
+						if (cgpa < 0 || cgpa>4.33) {
+							cerr << "Invalid CGPA. CGPA must be between 0 and 4.33\nThe student will not be considered\n";
+						}
+						else if (researchScore < 0 || researchScore>100) {
+							cerr << "Invalid research score. Research scores must be between 0 and 100\nThe student will not be considered\n";
+						}
+						else if (province != "BC" && province != "AB" & province != "ON" & province != "MB" && province != "NB" && province != "NL" && province != "YT" && province != "SK" && province != "NU" && province != "NS" && province != "QC" && province != "NT" && province != "NU" && province != "PE") {
+							cerr << "Invalid Province. \nPlease make sure the provinces are in their proper acronyms \nChoices:BC, AB, ON, MB, NB, NL, YT, SK, NU, NS, QC, NT, PE\nThe student will not be considered\n";
+						}
+						else {
+							studentPtr inDom = new DomesticStudent(firstName, lastName, cgpa, researchScore, stu_num + 20200000, province);
+							insert((search(domHead, inDom, sortDom)), domHead, domTail, inDom, sortDom);
+
+
+
+							studentPtr tempdom = new DomesticStudent;
+							tempdom = domHead;
+							while (tempdom != nullptr)
+							{
+								cout << *tempdom;
+								tempdom = tempdom->get_link();
+							}
+						}
+					
+		
+				}
+				else
+				{
+					string firstName, lastName, Country = "";
+					float cgpa = -1;
+					int researchScore = -1;
+					int toeflReading = -1;
+					int toeflListening = -1;
+					int toeflSpeaking = -1;
+					int toeflWriting = -1;
+
+
+					cout << "Please enter the student's first name" << endl;
+					cin >> firstName;
+					cout << endl;
+
+					cout << "Please enter the student's last name" << endl;
+					cin >> lastName;
+					cout << endl;
+
+					
+						cout << "Please enter the student's CGPA" << endl;
+						cin >> cgpa;
+						cout << endl;
+						
+					
+
+					
+						cout << "Please enter the student's research score" << endl;
+						cin >> researchScore;
+						cout << endl;
+						
+
+					cout << "Please enter the student's country" << endl;
+					cin >> Country;
+
+				
+						cout << "Please enter the student's Toefl reading score" << endl;
+						cin >> toeflReading;
+						cout << endl;
+						
+					
+				
+
+					
+						cout << "Please enter the student's Toefl listening score" << endl;
+						cin >> toeflListening;
+						cout << endl;
+						
+					
+
+					
+						cout << "Please enter the student's Toefl speaking score" << endl;
+						cin >> toeflSpeaking;
+						cout << endl;
+						
+					
+
+					
+						cout << "Please enter the student's Toefl writing score" << endl;
+						cin >> toeflWriting;
+						cout << endl;
+						
+
+
+						
+						
+
+						if (cgpa < 0 || cgpa>4.33) {
+							cerr << "Invalid CGPA. CGPA must be between 0 and 4.33\nThe student will not be considered\n";
+						}
+						else if (researchScore < 0 || researchScore>100) {
+							cerr << "Invalid research score. Research scores must be between 0 and 100\nThe student will not be considered\n";
+						}
+						else if (toeflListening < 20 || toeflListening>30) {
+							cerr << "Invalid Toefl listening score. Listening scores must be between 20 and 30\nThe student will not be considered\n";
+						}
+
+						else if (toeflReading < 20 || toeflReading>30) {
+							cerr << "Invalid Toefl reading score. Reading scores must be between 20 and 30\nThe student will not be considered\n";
+						}
+						else if (toeflSpeaking < 20 || toeflSpeaking>30) {
+							cerr << "Invalid Toefl speaking score. Speaking scores must be between 20 and 30\nThe student will not be considered\n";
+						}
+						else if (toeflWriting < 20 || toeflWriting>30) {
+							cerr << "Invalid Toefl writing score. Writing scores must be between 20 and 30 \nThe student will not be considered\n";
+						}
+						else if (toeflListening + toeflReading + toeflSpeaking + toeflWriting < 93) {
+							cerr << "Error: The student Total toefl score does not meet the requrement of being higher than 93\nThe student will not be considered\n ";
+						}
+						else {
+							studentPtr inInt = new InternationalStudent(firstName, lastName, cgpa, researchScore, stu_num + 20200000, Country, toeflReading, toeflListening, toeflSpeaking, toeflWriting);
+							insert((search(intHead, inInt, sortInt)), intHead, intTail, inInt, sortInt);
+
+							studentPtr tempint = new InternationalStudent;
+							tempint = intHead;
+							while (tempint != nullptr)
+							{
+								cout << *tempint;
+								tempint = tempint->get_link();
+							}
+							delete tempint;
+						}
+					
+				}
+				stu_num++;
+				cout << endl;
+				cout << "Would you like to add another student?" << endl;
+				cout << "press 'y' to add again:  ";
+				cin >> addAnother;
+
+				if (addAnother != 'y' && addAnother != 'Y')
+				{
+					break;
+				}
+				else
+				{
+					cout << endl;
+
+					continue;
+				}
+			}
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		}
 		else
 		{
-			cout << "Invalid entry. Ending program" << endl;
-			break;
-		}
-	}
-	
-	if (linkedSort == 'M' || linkedSort == 'm') {
-		float cgpa_threshold;
-		int rScore_threshold;
-		//merge then sort with mergeSort but pass overall char
-		tailNodeFinder(&domesticHeadNode, &domesticTailNode);
-		tailNodeFinder(&internationalHeadNode, &internationalTailNode);
-		domesticTailNode->nextNode = internationalHeadNode;
+		//////////////////////////////////////////////////////////////////////////DELETE STUDENTS////////////////////////////////////////////////////////
+		while (deleteAnother == 'y' || deleteAnother == 'Y')
+		{
+			deleteAnother = 'n';
+			string firstname, lastname;
+			int delChoice = 0;
+			cout << "Would you like to delete one student or all top and bottom students?" << endl;
+			cout << "[1] One Student" << endl;
+			cout << "[2] The current head and tail" << endl;
+			cin >> delChoice;
 
-		//make international head and tail pointer equal to null as the linked list no longer exists
-		internationalHeadNode = NULL;
-		internationalTailNode = NULL;
+			if (delChoice > 2 || delChoice < 1)
+			{
+				cerr << "ERROR: Please select a proper option" << endl;
+				delChoice = 'p';
+				
+				
+				continue;
+			}
 
-		mergeSort(&domesticHeadNode, 'O');
-		printLinkedList(&domesticHeadNode);
-		char extraFeature = 'x'; //EXTRA FEATURE to sort merged list by location alphabetically
-		cout << endl << "Above is all students (including ones that dont meet toefl requirements)." << endl << "To see which are addmitted to SFU in proper sorting order enter 'X', to sort merged list press by location for fun enter 'L'" << endl;
-		cin >> extraFeature;
-		if (extraFeature == 'L') {
-			int inputFail = 1;
-			while (inputFail == 1) {
-				cout << "Enter 1 to sort by location solely or Enter 2 to sort by Lab2 priority of research score, cgpa and then location. Enter anything other single char when done."<< endl;
-				cin >> extraFeature;
-				if (extraFeature == '1') {
-					mergeSort(&domesticHeadNode, 'L');
-					printLinkedList(&domesticHeadNode);
+			if (delChoice == 1)
+			{
+				cout << "Please enter the first name of the student to be deleted" << endl;
+				cin >> firstname;
+				cout << endl;
+
+				cout << "Please enter the last name of the student to be deleted" << endl;
+				cin >> lastname;
+				cout << endl;
+
+				studentPtr temp1 = domHead;
+				studentPtr temp2 = intHead;
+
+
+
+				while (temp1 != nullptr)
+				{
+					char confirmation = '\0';
+					temp1 = deleteSearch(domHead, temp1, sortDom, firstname, lastname);
+					if (temp1 == nullptr)
+					{
+						break;
+					}
+					/*
+					cout << "Do you want to delete this student?" << endl;
+					cout << *temp1;
+					cout << "Choice (y/n): ";
+					cin >> confirmation;
+					cout << endl;
+					*/
+					//if (confirmation == 'y' || confirmation == 'Y') {
+						deleteStudent(domHead, domTail, temp1, sortDom);
+					//}
+					
 				}
-				else if (extraFeature == '2') {
-					mergeSort(&domesticHeadNode, 'R');
-					printLinkedList(&domesticHeadNode);
+				while (temp2 != nullptr)
+				{
+					char confirmation = '\0';
+					temp2 = deleteSearch(intHead, temp2, sortDom, firstname, lastname);
+					if (temp2 == nullptr)
+					{
+						break;
+					}
+
+					/*
+					cout << "Do you want to delete this student?" << endl;
+					cout << *temp1;
+					cout << "Choice (y/n): ";
+					cin >> confirmation;
+					cout << endl;
+					*/
+					//if (confirmation == 'y' || confirmation == 'Y') {
+						deleteStudent(domHead, domTail, temp2, sortDom);
+					//}
 				}
-				else {
-					cout << "Invalid input, returning to SFU admission." << endl;
-					break;
+
+				studentPtr tempint;
+				studentPtr tempdom;
+				tempdom = domHead;
+				while (tempdom != nullptr)
+				{
+					cout << *tempdom;
+					tempdom = tempdom->get_link();
+				}
+
+				cout << endl;
+
+				tempint = intHead;
+				while (tempint != nullptr)
+				{
+					cout << *tempint;
+					tempint = tempint->get_link();
 				}
 			}
-			inputFail = 0;
-			cout << "Students admitted to SFU will be sorted by research score, cgpa, location instead of previous position in international and domestic list"<< endl;
-			mergeSort(&domesticHeadNode, 'R');
+			else
+			{
+				studentPtr temp = domHead;
+				studentPtr temp2 = intHead;
+				char heta = 'b';
+				deleteStudent(domHead, domTail, temp, heta);
+				deleteStudent(intHead, intTail, temp2, heta);
+
+
+				studentPtr tempint;
+				studentPtr tempdom;
+				tempdom = domHead;
+				while (tempdom != nullptr)
+				{
+					cout << *tempdom;
+					tempdom = tempdom->get_link();
+				}
+				tempint = intHead;
+				while (tempint != nullptr)
+				{
+					cout << *tempint;
+					tempint = tempint->get_link();
+				}
+			}
+
+			cout << endl;
+			cout << "Would you like to delete another student?" << endl;
+			cout << "press 'y' to delete again:  ";
+			cin >> deleteAnother;
+		
+			if (deleteAnother != 'y' && deleteAnother != 'Y')
+			{
+				break;
+			}
+			else
+			{
+				cout << endl;
+
+				continue;
+			}
+
 		}
-		cout << "Enter cgpa threshold" << endl;
-		cin >> cgpa_threshold;
-		cout << "Enter research score threshold" << endl;
-		cin >> rScore_threshold;
-		threshodldPrint(&domesticHeadNode, cgpa_threshold, rScore_threshold);
-		cout << endl << "The students above shall be admitted to SFU!" << endl;
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		}
+		
+
+		cout << endl;
+		cout << "Would you like to go back to the homepage?" << endl;
+		cout << "press 'y' to sort again:  ";
+		cin >> gotoHome;
+
+		if (gotoHome != 'y' && gotoHome != 'Y')
+		{
+			break;
+		}
+		else
+		{
+			cout << endl;
+
+			continue;
+		}
+	
+
+
+
 	}
 
-	char something;
-	cout << "Enter any char to delete all linked lists and close the program." << endl;
-	cin >> something;
-	//freeing up memory as program is over
-	while (domesticHeadNode != NULL) {
-		StudentList* soonToBeDeadNode = domesticHeadNode;
-		domesticHeadNode = domesticHeadNode->nextNode;
-		free(soonToBeDeadNode);
+	merge(domHead, intHead, head, tail);
+		
+
+	studentPtr temp = new Student;
+	temp = head;
+
+	while (temp != nullptr) {
+		cout << *temp;
+
+		if (temp->get_link() == nullptr) {
+			tail = temp;
+		}
+		temp = temp->get_link();
 
 	}
-	while (internationalHeadNode != NULL) {
-		StudentList* soonToBeDeadNode = internationalHeadNode;
-		internationalHeadNode = internationalHeadNode->nextNode;
-		free(soonToBeDeadNode);
+	delete temp;
+	cout << endl;
+	
+	
+	homeChoice = 0;
+	gotoHome = 'y';
+
+	// INTERFACE
+	while (gotoHome == 'y' || gotoHome == 'Y') //This while loop is for asking the user if they want to come back to homepage 
+	{
+		gotoHome = 'n';
+		char searchAgain = 'y';
+		char addAnother = 'y';
+		char deleteAnother = 'y';
+		char searchType = 'p';
+		char studType = 'p';
+		int idChoice = 0;
+
+		string firstname = "";
+		string lastname = "";
+
+
+		cout << "Welcome to SFU! What would you like to do today?" << endl;
+
+		cout << "[1] Search For A Student" << endl;
+		cout << "[2] Add A Student" << endl;
+		cout << "[3] Delete A Student" << endl;
+		cout << "[4] Filter Merged List" << endl;
+		cout << "[5] Exit Program" << endl;
+
+		cout << "Choice: ";
+		cin >> homeChoice;
+		cout << endl;
+
+		if (homeChoice > 5 || homeChoice <= 0)
+		{
+			cerr << "ERROR: Please select a proper option" << endl;
+			homeChoice = 0;
+			
+			
+			continue;
 		}
+
+		if (homeChoice == 5)
+		{
+			break;
+		}
+		else if (homeChoice == 4)
+		{
+
+			int cgpa = -1;
+			int researchScore = -1;
+
+			while (cgpa < 0 || cgpa >4.33) {
+				
+				
+				cout << "Enter the CGPA threshold for SFU admission" << endl;
+				cin >> cgpa;
+				if ((cgpa < 0 || cgpa >4.33)) {
+					cerr << "Not a valid CGPA\nPlease Enter A Value from 0 to 4.33\n";
+				}
+
+			}
+			
+			while (researchScore < 0 || researchScore > 100) {
+				
+				
+				cout << "Enter the research score threshold for SFU admission" << endl;
+				cin >> researchScore;
+				if (researchScore < 0 || researchScore > 100) {
+					cerr << "Not a valid Research Score\nPlease Enter A Value from 0 to 100\n";
+				}
+			}
+				
+			////////////////////////////////////////     Code For Filtering           /////////////////////////////////////////////
+			threshold(head, cgpa, researchScore );
+			
+		}
+
+		else if (homeChoice == 1)
+		{
+			//////////////////////////////////////////////////////////////////////////SEARCHING////////////////////////////////////////////////////////
+			while (searchAgain == 'y' || searchAgain == 'Y')
+			{
+				idChoice = 'p';
+				float cgpaChoice = 0;
+				firstname = "";
+				string lastname = "";
+				cout << "What would you like to search?" << endl;
+				cout << "[N] Full Name " << endl;
+				cout << "[C] CGPA" << endl << "[R] Research Score " << endl;
+				cout << "[I] Student ID" << endl;
+
+				cout << "Choice: ";
+				cin >> searchType;
+				cout << endl;
+
+				if (searchType != 'n' && searchType != 'N' && searchType != 'c' && searchType != 'C' && searchType != 'r' && searchType != 'R' && searchType != 'I' && searchType != 'i' || cin.peek() != '\n')
+				{
+					cerr << "ERROR: Please select a proper searching category" << endl;
+					searchType = 'p';
+					
+					
+					continue;
+				}
+				// SEARCH FUNCTIONS
+
+				if (searchType == 'I' || searchType == 'i')
+				{
+					cout << "Please enter the ID you would like to find" << endl;
+					cin >> idChoice;
+					searchID(head, nullptr, idChoice);
+				}
+				else if (searchType == 'c' || searchType == 'C')
+				{
+					cout << "Please enter the CGPA you would like to find" << endl;
+					cin >> cgpaChoice;
+					searchCGPA(head, nullptr, cgpaChoice);
+				}
+				else if (searchType == 'r' || searchType == 'R')
+				{
+					cout << "Please enter the research score you would like to find" << endl;
+					cin >> idChoice;
+					searchReScore(head, nullptr, idChoice);
+				}
+				else if (searchType == 'n' || searchType == 'N')
+				{
+					cout << "Please enter the first name you would like to find" << endl;
+					cin >> firstname;
+					cout << endl;
+					cout << "Please enter the last name you would like to find" << endl;
+					cin >> lastname;
+					cout << endl;
+
+					searchName(head, nullptr, firstname, lastname);
+
+				}
+
+				cout << endl;
+				cout << "Would you like to search again?" << endl;
+				cout << "press 'y' to search again:  ";
+				cin >> searchAgain;
+
+				if (searchAgain != 'y' && searchAgain != 'Y')
+				{
+					break;
+				}
+				else
+				{
+					cout << endl;
+
+					continue;
+				}
+
+			}
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		}
+		else if (homeChoice == 2)
+		{
+			//////////////////////////////////////////////////////////////////////////INSERT NEW STUDENTS////////////////////////////////////////////////////////
+			while (addAnother == 'y' || addAnother == 'Y')
+			{
+				cout << "Pick your student type" << endl;
+				cout << "[D] Domestic" << endl;
+				cout << "[I] International" << endl;
+
+				cout << "Choice: ";
+				cin >> studType;
+				cout << endl;
+
+				if (studType != 'd' && studType != 'D' && studType != 'i' && studType != 'I' || cin.peek() != '\n')
+				{
+					cerr << "ERROR: Please select a proper student type" << endl;
+					studType = 'p';
+					
+					
+					continue;
+				}
+
+				if (studType == 'd' || studType == 'D')
+				{
+					string firstName, lastName, province = "";
+					float cgpa = -1;
+					int researchScore = -1;
+
+
+					cout << "Please enter the student's first name" << endl;
+					cin >> firstName;
+					cout << endl;
+
+					cout << "Please enter the student's last name" << endl;
+					cin >> lastName;
+					cout << endl;
+
+					
+						cout << "Please enter the student's CGPA" << endl;
+						cin >> cgpa;
+						cout << endl;
+						
+					
+
+				
+						cout << "Please enter the student's research score" << endl;
+						cin >> researchScore;
+						cout << endl;
+						
+					
+					
+					
+						cout << "Please enter the student's province" << endl;
+						cin >> province;
+						
+					
+
+						if (cgpa < 0 || cgpa>4.33) {
+							cerr << "Invalid CGPA. CGPA must be between 0 and 4.33\nThe student will not be considered\n";
+						}
+						else if (researchScore < 0 || researchScore>100) {
+							cerr << "Invalid research score. Research scores must be between 0 and 100\nThe student will not be considered\n";
+						}
+						else if (province != "BC" && province != "AB" & province != "ON" & province != "MB" && province != "NB" && province != "NL" && province != "YT" && province != "SK" && province != "NU" && province != "NS" && province != "QC" && province != "NT" && province != "NU" && province != "PE") {
+							cerr << "Invalid Province. \nPlease make sure the provinces are in their proper acronyms \nChoices:BC, AB, ON, MB, NB, NL, YT, SK, NU, NS, QC, NT, PE\nThe student will not be considered\n";
+						}
+						else {
+							studentPtr inDom = new DomesticStudent(firstName, lastName, cgpa, researchScore, stu_num + 20200000, province);
+							insert((search(head, inDom, sortDom)), head, tail, inDom, sortDom);
+
+
+
+							studentPtr tempdom = new DomesticStudent;
+							tempdom = head;
+							while (tempdom != nullptr)
+							{
+								cout << *tempdom;
+								tempdom = tempdom->get_link();
+							}
+						}
+					
+		
+				}
+				else
+				{
+					string firstName, lastName, Country = "";
+					float cgpa = -1;
+					int researchScore = -1;
+					int toeflReading = -1;
+					int toeflListening = -1;
+					int toeflSpeaking = -1;
+					int toeflWriting = -1;
+
+
+					cout << "Please enter the student's first name" << endl;
+					cin >> firstName;
+					cout << endl;
+
+					cout << "Please enter the student's last name" << endl;
+					cin >> lastName;
+					cout << endl;
+
+					
+						cout << "Please enter the student's CGPA" << endl;
+						cin >> cgpa;
+						cout << endl;
+						
+					
+
+					
+						cout << "Please enter the student's research score" << endl;
+						cin >> researchScore;
+						cout << endl;
+						
+
+					cout << "Please enter the student's country" << endl;
+					cin >> Country;
+
+				
+						cout << "Please enter the student's Toefl reading score" << endl;
+						cin >> toeflReading;
+						cout << endl;
+						
+					
+				
+
+					
+						cout << "Please enter the student's Toefl listening score" << endl;
+						cin >> toeflListening;
+						cout << endl;
+						
+					
+
+					
+						cout << "Please enter the student's Toefl speaking score" << endl;
+						cin >> toeflSpeaking;
+						cout << endl;
+						
+					
+
+					
+						cout << "Please enter the student's Toefl writing score" << endl;
+						cin >> toeflWriting;
+						cout << endl;
+						
+
+
+
+					if (cgpa < 0 || cgpa>4.33) {
+						cerr << "Invalid CGPA. CGPA must be between 0 and 4.33\nThe student will not be considered\n";
+					}
+					else if (researchScore < 0 || researchScore>100) {
+						cerr << "Invalid research score. Research scores must be between 0 and 100\nThe student will not be considered\n";
+					}
+					else if (toeflListening < 20 || toeflListening>30) {
+						cerr << "Invalid Toefl listening score. Listening scores must be between 20 and 30\nThe student will not be considered\n";
+					}
+					
+					else if (toeflReading < 20 || toeflReading>30) {
+						cerr << "Invalid Toefl reading score. Reading scores must be between 20 and 30\nThe student will not be considered\n";
+					}
+					else if (toeflSpeaking < 20 || toeflSpeaking>30) {
+						cerr << "Invalid Toefl speaking score. Speaking scores must be between 20 and 30\nThe student will not be considered\n";
+					}
+					else if (toeflWriting < 20 || toeflWriting>30) {
+						cerr << "Invalid Toefl writing score. Writing scores must be between 20 and 30 \nThe student will not be considered\n";
+					}
+					else if (toeflListening+ toeflReading + toeflSpeaking + toeflWriting < 93) {
+						cerr << "Error: The student Total toefl score does not meet the requrement of being higher than 93\nThe student will not be considered\n ";
+					}
+					else {
+						studentPtr inInt = new InternationalStudent(firstName, lastName, cgpa, researchScore, stu_num + 20200000, Country, toeflReading, toeflListening, toeflSpeaking, toeflWriting);
+						insert((search(head, inInt, sortInt)), head, tail, inInt, sortInt);
+						
+						studentPtr tempint = new InternationalStudent;
+						tempint = head;
+						while (tempint != nullptr)
+						{
+							cout << *tempint;
+							tempint = tempint->get_link();
+						}
+						delete tempint;
+					}
+					
+				}
+
+				stu_num++;
+				cout << endl;
+				cout << "Would you like to add another student?" << endl;
+				cout << "press 'y' to add again:  ";
+				cin >> addAnother;
+
+				if (addAnother != 'y' && addAnother != 'Y')
+				{
+					break;
+				}
+				else
+				{
+					cout << endl;
+
+					continue;
+				}
+			}
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		}
+		else
+		{
+		//////////////////////////////////////////////////////////////////////////DELETE STUDENTS////////////////////////////////////////////////////////
+		while (deleteAnother == 'y' || deleteAnother == 'Y')
+		{
+			deleteAnother = 'n';
+			string firstname, lastname;
+			int delChoice = 0;
+			cout << "Would you like to delete one student or all top and bottom students?" << endl;
+			cout << "[1] One Student" << endl;
+			cout << "[2] The current head and tail" << endl;
+			cin >> delChoice;
+
+			if (delChoice > 2 || delChoice < 1)
+			{
+				cerr << "ERROR: Please select a proper option" << endl;
+				delChoice = 'p';
+				
+				
+				continue;
+			}
+
+			if (delChoice == 1)
+			{
+				cout << "Please enter the first name of the student to be deleted" << endl;
+				cin >> firstname;
+				cout << endl;
+
+				cout << "Please enter the last name of the student to be deleted" << endl;
+				cin >> lastname;
+				cout << endl;
+
+				studentPtr temp1 = head;
+				
+
+
+
+				while (temp1 != nullptr)
+				{
+					char confirmation = '\0';
+					temp1 = deleteSearch(head, temp1, sortDom, firstname, lastname);
+					if (temp1 == nullptr)
+					{
+						break;
+					}
+					/*
+					cout << "Do you want to delete this student?" << endl;
+					cout << *temp1;
+					cout << "Choice (y/n): ";
+					cin >> confirmation;
+					cout << endl;
+					*/
+					//if (confirmation == 'y' || confirmation == 'Y') {
+						deleteStudent(head, tail, temp1, sortDom);
+					//}
+					
+				}
+				
+
+				studentPtr tempdom;
+				tempdom = head;
+				while (tempdom != nullptr)
+				{
+					cout << *tempdom;
+					tempdom = tempdom->get_link();
+				}
+				delete tempdom;
+
+				cout << endl;
+
+			
+			}
+			else
+			{
+				studentPtr temp = head;
+		
+				char heta = 'b';
+				deleteStudent(head, tail, temp, heta);
+			
+
+
+			
+				studentPtr tempdom;
+				tempdom = head;
+				while (tempdom != nullptr)
+				{
+					cout << *tempdom;
+					tempdom = tempdom->get_link();
+				}
+				
+			}
+
+			cout << endl;
+			cout << "Would you like to delete another student?" << endl;
+			cout << "press 'y' to delete again:  ";
+			cin >> deleteAnother;
+			
+			if (deleteAnother != 'y' && deleteAnother != 'Y')
+			{
+				break;
+			}
+			else
+			{
+				cout << endl;
+
+				continue;
+			}
+
+		}
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		}
+		
+
+		cout << endl;
+		cout << "Would you like to go back to the homepage?" << endl;
+		cout << "press 'y' to sort again:  ";
+		cin >> gotoHome;
+
+		if (gotoHome != 'y' && gotoHome != 'Y')
+		{
+			break;
+		}
+		else
+		{
+			cout << endl;
+
+			continue;
+		}
+
+
+	}
+
+	while(head != nullptr) // deleting all nodes before exiting the program
+	{
+		studentPtr temp = head;
+		head = head->get_link();
+
+		temp->set_link(nullptr); 
+		delete temp;
+	}
+
+	
+	head = nullptr;
+	tail = nullptr;
+	intHead = nullptr;
+	domHead = nullptr;
+	intTail = nullptr;
+	domTail = nullptr;
+
 	return 0;
 }
-
-
-
-
-
-void singleSort(int stu_count1, DomesticStudent *StudentD, char type) {
-	//selection sort algorithm
-	for (int i = 0; i < stu_count1 - 1; i++)
-	{
-		for (int j = i + 1; j < stu_count1; j++)
-		{
-			//if j element research score is larger, swap 
-			if (
-				((type == 'R') && (compareResearchScore(StudentD[i], StudentD[j]) == -1))
-				|| ((type == 'F') && (compareFirstName(StudentD[i], StudentD[j]) == -1))
-				|| ((type == 'C') && (compareCGPA(StudentD[i], StudentD[j]) == -1))
-				|| ((type == 'L') && (compareLastName(StudentD[i], StudentD[j]) == -1))
-				|| ((type == 'P') && (compareProvince(StudentD[i], StudentD[j]) == -1))
-				)
-			{
-				DomesticStudent tempD;
-				//swap elements using overloaded assignment operator
-				tempD = StudentD[i];//use temp to swap
-				StudentD[i] = StudentD[j];
-				StudentD[j] = tempD;
-			}
-		}
-	}
-}
-void singleSort(int stu_count2, InternationalStudent *StudentI, char type) {
-	//selection sort algorithm
-	for (int i = 0; i < stu_count2 - 1; i++)
-	{
-		for (int j = i + 1; j < stu_count2; j++)
-		{
-			//if j element research score is larger, swap 
-			if (
-				((type == 'R') && (compareResearchScore(StudentI[i], StudentI[j]) == -1))
-				|| ((type == 'F') && (compareFirstName(StudentI[i], StudentI[j]) == -1))
-				|| ((type == 'C') && (compareCGPA(StudentI[i], StudentI[j]) == -1))
-				|| ((type == 'L') && (compareLastName(StudentI[i], StudentI[j]) == -1))
-				|| ((type == 'Z') && (compareCountry(StudentI[i], StudentI[j]) == -1))
-				|| ((type == 'T') && (compareToeflScore(StudentI[i], StudentI[j]) == -1))
-				)
-			{
-				InternationalStudent tempI;
-				//swap elements using overloaded assignment operator
-				tempI = StudentI[i];//use temp to swap
-				StudentI[i] = StudentI[j];
-				StudentI[j] = tempI;
-			}
-		}
-	}
-}
-void insertNode(DomesticStudent &Student1, StudentList **domesticHeadNode) { //insert node function for domestic student list
-	if (*domesticHeadNode == NULL) {
-
-		StudentList *newHead = new StudentList;
-		newHead->domStudent = Student1;
-		(*domesticHeadNode) = newHead;
-	}
-	else {
-
-		StudentList*newHead = new StudentList;
-		newHead->domStudent = Student1;
-		newHead->nextNode = *domesticHeadNode;
-		*domesticHeadNode = newHead;
-	}
-
-}
-void insertNode(InternationalStudent &Student1, StudentList **internationalHeadNode) { //Insert node function for international student list
-	if (*internationalHeadNode == NULL) {
-		StudentList *newHead = new StudentList;
-		newHead->intStudent = Student1;
-		(*internationalHeadNode) = newHead;
-	}
-	else {
-		StudentList*newHead = new StudentList;
-		newHead->intStudent = Student1;
-		newHead->nextNode = *internationalHeadNode;
-		*internationalHeadNode = newHead;
-	}
-
-}
-
-
-void mergeSort(StudentList**headRef, char type) {//very fast speed of O(n*Logn) 
-	StudentList* head = *headRef;
-	StudentList* a;
-	StudentList* b;
-	//base case check
-	if (head == NULL || head->nextNode == NULL) {
-		return;
-	}
-	//split linked lists into two
-	frontBackSplit(head, &a, &b);
-	//recursively sort itself with split lists
-	mergeSort(&a, type);
-	mergeSort(&b, type);
-
-	//merge result
-	*headRef = SortedMerge(a, b, type);
-}
-
-StudentList * SortedMerge(StudentList * a, StudentList * b, char type)
-{
-	StudentList * newHead = NULL;
-	if (type == 'R') {//lab 2 scheme research score, then cgpa, then province or country
-
-		//base case check
-		if (a == NULL) {
-			return (b);
-		}
-		if (b == NULL) {
-			return (a);
-		}
-		if (compareListResearchScore(a, b) == -1) {//all comparison functions returns -1 if second is bigger, 0 if equal and 1 if in correct order
-			newHead = b;
-			newHead->nextNode = SortedMerge(a, b->nextNode, type);
-
-		}
-		else if (compareListResearchScore(a, b) == 0 && compareListCGPA(a, b) == -1) {
-			newHead = b;
-			newHead->nextNode = SortedMerge(a, b->nextNode, type);
-		}
-		else if (compareListResearchScore(a, b) == 0 && compareListCGPA(a, b) == 0 && compareListLocation(a, b) == -1) {
-			newHead = b;
-			newHead->nextNode = SortedMerge(a, b->nextNode, type);
-		}
-		else {
-			newHead = a;
-			newHead->nextNode = SortedMerge(a->nextNode, b, type);
-		}
-		return (newHead);
-	}
-	if (type == 'O') {//for overall sort scheme
-		//base case check
-		if (a == NULL) {
-			return (b);
-		}
-		if (b == NULL) {
-			return (a);
-		}
-		if (compareListResearchScore(a, b) == -1) {
-			newHead = b;
-			newHead->nextNode = SortedMerge(a, b->nextNode, type);
-
-		}
-		else if (compareListResearchScore(a, b) == 0 && compareListCGPA(a, b) == -1) {
-			newHead = b;
-			newHead->nextNode = SortedMerge(a, b->nextNode, type);
-		}//assignment asks for them to be in domestic then international but program has capabilities to sort by location alpabetically regardless of student type
-		//else if (compareListResearchScore(a, b) == 0 && compareListCGPA(a, b) == 0 && compareListLocation(a, b) == -1) {
-		//	newHead = b;
-		//	newHead->nextNode = SortedMerge(a, b->nextNode, type);
-		//}
-		else {
-			newHead = a;
-			newHead->nextNode = SortedMerge(a->nextNode, b, type);
-		}
-
-		return (newHead);
-	}
-	if (type == 'L') {//lab 2 scheme research score, then cgpa, then province or country
-
-		//base case check
-		if (a == NULL) {
-			return (b);
-		}
-		if (b == NULL) {
-			return (a);
-		}
-		if (compareListLocation(a, b) == -1) {//all comparison functions returns -1 if second is bigger, 0 if equal and 1 if in correct order
-			newHead = b;
-			newHead->nextNode = SortedMerge(a, b->nextNode, type);
-
-		}
-		else {
-			newHead = a;
-			newHead->nextNode = SortedMerge(a->nextNode, b, type);
-		}
-		return (newHead);
-	}
-	cout << "control path shouldnt reach here in sorted merge...";
-	return (newHead);
-
-}
-void frontBackSplit(StudentList*sourceNode, StudentList**frontRef, StudentList**backRef) { //split front back 
-	StudentList *fast = sourceNode->nextNode;
-	StudentList* slow = sourceNode;
-
-	while (fast != NULL) {
-		fast = fast->nextNode;
-		if (fast != NULL) {
-			slow = slow->nextNode;
-			fast = fast->nextNode;
-		}
-
-	}
-
-	*frontRef = sourceNode;
-	*backRef = slow->nextNode;
-	//splits
-	slow->nextNode = NULL;
-}
-
-void tailNodeFinder(StudentList **headNode, StudentList **tailNode) {
-	//goes through linked list to get tail node pointer
-	StudentList *tempPtr = *headNode;
-	if (tempPtr == NULL) {//base case that there one or no nodes
-		*tailNode = *headNode;
-	}
-
-	while (tempPtr != NULL) {
-		tempPtr = tempPtr->nextNode;
-		if (tempPtr->nextNode == NULL) {
-			*tailNode = tempPtr;
-			//this breaks the loop so tempPtr points the the last node that points to null
-			break;
-		}
-	}
-}
-void printLinkedList(StudentList**headNode) {
-	StudentList *tempPtr = (*headNode);
-	//create blank international and domestic students to compare and see which type each node is
-	DomesticStudent blankDomesticStudent;
-	InternationalStudent blankInternationalStudent;
-	if (tempPtr == NULL) {//base case that there one or no nodes
-		cout << "Linked list is empy..." << endl;
-	}
-	while (tempPtr != NULL) {//compares determins node type and prints object
-		if (tempPtr->domStudent == blankDomesticStudent) {
-			cout << tempPtr->intStudent << endl;
-
-		}
-		else if (tempPtr->intStudent == blankInternationalStudent) {
-			cout << tempPtr->domStudent;
-		}
-		tempPtr = tempPtr->nextNode;
-
-	}
-
-}
-void searchGPA(StudentList**headNode, float cgpa) {
-	StudentList *tempPtr = (*headNode);
-	//create blank international and domestic students to compare and see which type each node is
-	DomesticStudent blankDomesticStudent;
-	InternationalStudent blankInternationalStudent;
-	if (tempPtr == NULL) {//base case that there one or no nodes
-		cout << "Linked list is empy..." << endl;
-	}
-	while (tempPtr != NULL) {//compares determins node type and prints object
-		if (tempPtr->domStudent == blankDomesticStudent) {
-			if (tempPtr->intStudent.get_cgpa() == cgpa) {
-				cout << tempPtr->intStudent << endl;
-			}
-
-		}
-		else if (tempPtr->intStudent == blankInternationalStudent) {
-			if (tempPtr->domStudent.get_cgpa() == cgpa) {
-				cout << tempPtr->domStudent << endl;
-			}
-
-		}
-		tempPtr = tempPtr->nextNode;
-
-	}
-}
-void searchResearchScore(StudentList**headNode, int rScore) {
-	StudentList *tempPtr = (*headNode);
-	//create blank international and domestic students to compare and see which type each node is
-	DomesticStudent blankDomesticStudent;
-	InternationalStudent blankInternationalStudent;
-	if (tempPtr == NULL) {//base case that there one or no nodes
-		cout << "Linked list is empy..." << endl;
-	}
-	while (tempPtr != NULL) {//compares determins node type and prints object
-		if (tempPtr->domStudent == blankDomesticStudent) {
-			if (tempPtr->intStudent.get_researchscore() == rScore) {
-				cout << tempPtr->intStudent << endl;
-			}
-
-		}
-		else if (tempPtr->intStudent == blankInternationalStudent) {
-			if (tempPtr->domStudent.get_researchscore() == rScore) {
-				cout << tempPtr->domStudent << endl;
-			}
-
-		}
-		tempPtr = tempPtr->nextNode;
-
-	}
-}
-void searchApplicationID(StudentList**headNode, int appID) {
-	StudentList *tempPtr = (*headNode);
-	//create blank international and domestic students to compare and see which type each node is
-	DomesticStudent blankDomesticStudent;
-	InternationalStudent blankInternationalStudent;
-	if (tempPtr == NULL) {//base case that there one or no nodes
-		cout << "Linked list is empty..." << endl;
-	}
-	while (tempPtr != NULL) {//compares determins node type and prints object
-		if (tempPtr->domStudent == blankDomesticStudent) {
-			if (tempPtr->intStudent.get_appID() == appID) {
-				cout << tempPtr->intStudent << endl;
-			}
-
-		}
-		else if (tempPtr->intStudent == blankInternationalStudent) {
-			if (tempPtr->domStudent.get_appID() == appID) {
-				cout << tempPtr->domStudent << endl;
-			}
-
-		}
-		tempPtr = tempPtr->nextNode;
-
-	}
-}
-void searchName(StudentList**headNode, string firstName, string lastName) {
-	StudentList *tempPtr = (*headNode);
-	//create blank international and domestic students to compare and see which type each node is
-	DomesticStudent blankDomesticStudent;
-	InternationalStudent blankInternationalStudent;
-	if (tempPtr == NULL) {//base case that there one or no nodes
-		cout << "Linked list is empty..." << endl;
-	}
-	while (tempPtr != NULL) {//compares determins node type and prints object
-		if (tempPtr->domStudent == blankDomesticStudent) {
-			if (tempPtr->intStudent.get_firstname() == firstName && tempPtr->intStudent.get_lastname() == lastName) {
-				cout << tempPtr->intStudent << endl;
-			}
-
-		}
-		else if (tempPtr->intStudent == blankInternationalStudent) {
-			if (tempPtr->domStudent.get_firstname() == firstName && tempPtr->domStudent.get_lastname() == lastName) {
-				cout << tempPtr->domStudent << endl;
-			}
-
-		}
-		tempPtr = tempPtr->nextNode;
-
-	}
-}
-
-void deleteByName(StudentList**headNode, string firstName, string lastName) {
-	StudentList *tempPtr = (*headNode);
-	StudentList *previousNode = (*headNode);
-	//create blank international and domestic students to compare and see which type each node is
-	DomesticStudent blankDomesticStudent;
-	InternationalStudent blankInternationalStudent;
-	if (tempPtr == NULL) {//base case that there one or no nodes
-		cout << "Linked list is empty..." << endl;
-	}
-	if (tempPtr->nextNode == NULL) {//checks if there is only one node
-		*headNode = NULL;
-		free(tempPtr);//free memory
-		cout << "Linked list is now empty.";
-	}
-	while (tempPtr != NULL) {//compares determins node type and prints object
-
-		if (tempPtr->domStudent == blankDomesticStudent) {
-			if (tempPtr->intStudent.get_firstname() == firstName && tempPtr->intStudent.get_lastname() == lastName) {
-				cout << tempPtr->intStudent << endl << "^^ has been Deleted";
-				if (tempPtr->nextNode == NULL) {
-					previousNode->nextNode = NULL;
-					free(tempPtr);//free memory
-					break;
-				}
-
-				previousNode->nextNode = tempPtr->nextNode;
-				free(tempPtr);//free memory
-				break;
-			}
-
-		}
-		else if (tempPtr->intStudent == blankInternationalStudent) {
-			if (tempPtr->domStudent.get_firstname() == firstName && tempPtr->domStudent.get_lastname() == lastName) {
-				cout << tempPtr->domStudent << endl << "^^ has been Deleted";
-				if (tempPtr->nextNode == NULL) {
-					previousNode->nextNode = NULL;
-					free(tempPtr);//free memory
-					break;
-				}
-				previousNode->nextNode = tempPtr->nextNode;
-				free(tempPtr);//free memory
-				break;
-			}
-
-		}
-		previousNode = tempPtr;
-		tempPtr = tempPtr->nextNode;
-
-	}
-}
-void specialDelete(StudentList**headNode, StudentList **tailNode) {
-	StudentList *tempPtr = *headNode;
-	if (*headNode == NULL) {//base case that there one or no nodes
-		cout << "Error can't special delete empty list. Exiting program" << endl;
-		exit(1);
-	}
-	//if there is only one node
-	if (tempPtr->nextNode == NULL) {//checks if there is only one node
-		*headNode = NULL;
-		*tailNode = NULL;
-		free(tempPtr);//free memory
-		cout << "Linked list is now empty.";
-	}
-	else {
-		//this deletes the first and last node of the linked list
-		StudentList *oldheadPtr = (*headNode);
-		StudentList *oldtailPtr = (*headNode);
-
-		//find node before tailnode 
-		while (oldtailPtr != NULL) {
-			oldtailPtr = oldtailPtr->nextNode;
-			if (oldtailPtr->nextNode == (*tailNode)) {
-				oldtailPtr->nextNode = NULL;
-				free(*tailNode);
-				*tailNode = oldtailPtr;
-				//this breaks the loop so tempPtr points the the last node that points to null
-				break;
-			}
-		}
-		*headNode = oldheadPtr->nextNode;
-		free(oldheadPtr);
-	}
-
-}
-
-void threshodldPrint(StudentList**headNode, float cgpaThreshold, int researchScoreThreshold) {
-	StudentList *tempPtr = (*headNode);
-	//create blank international and domestic students to compare and see which type each node is
-	DomesticStudent blankDomesticStudent;
-	InternationalStudent blankInternationalStudent;
-	if (tempPtr == NULL) {//base case that there one or no nodes
-		cout << "Linked list is empy..." << endl;
-	}
-	while (tempPtr != NULL) {//compares determins node type and prints object
-		if (tempPtr->domStudent == blankDomesticStudent) {
-			if (tempPtr->intStudent.get_cgpa() >= cgpaThreshold && tempPtr->intStudent.get_researchscore() >= researchScoreThreshold) {
-				//checks toeflscore requirment is met
-				if (tempPtr->intStudent.checkTOEFLreq(tempPtr->intStudent.get_Tread(), tempPtr->intStudent.get_Twrite(), tempPtr->intStudent.get_Tspeak(), tempPtr->intStudent.get_Tlisten())) {
-					cout << tempPtr->intStudent << endl;
-				}
-			}
-
-		}
-		else if (tempPtr->intStudent == blankInternationalStudent) {
-			if (tempPtr->domStudent.get_cgpa() >= cgpaThreshold && tempPtr->domStudent.get_researchscore() >= researchScoreThreshold) {
-				cout << tempPtr->domStudent;
-			}
-		}
-		tempPtr = tempPtr->nextNode;
-
-	}
-
-}
-

@@ -1,111 +1,178 @@
+/*
+Ensc 251
+Dr Zhenman Fang
+Diego Flores, Ansley Ang
+September 25, 2019
+Lab 1
+student.h
 
-//Dakota and Colin
-//ENSC 251 Lab Assingment 
-//
-//header file student.hpp to declare the class ToeflScore, the class Student, and child classes of 
-//student called DomesticStudent and InternationalStudent.
-//DomesicStudent contains the unique member variable 'province', and InternationalStudent contains
-//the unique member varibles 'country' and 'TOEFL'. The other variables, like first and last name,
-//student number, researchscore, etc are inherited from parent class Student. 
+This file makes all the declarations for the Student class. All child and parent classes have constructors, copy constructors, destructors, get and set functions. The Student class includes friend functions for
+comparing first name, last name, cgpa, and research score. Domestic and International Student have similar compare functions for province and country. There is also
+a declaration for the overloaded '<<' and '=' for each child.
 
-#ifndef STUDENT_H //to avoid multiple class definitions
+
+*/
+
+
+#ifndef STUDENT_H
 #define STUDENT_H
-#include <iostream>
-#include <string>
-#include <cstdlib>
-//#include <fstream>
-//#include <sstream>
 
-using namespace std;
 
-//the class Student contains the basic elements/info obtained for generic students, including things like
-//the first and last names, and cgpa. These are general to all students, and is therefore used for both
-//international and domestic studets (hence why its the parent class)
+//header file student.hpp to declare your classes
+using namespace std; //use namespace std
+#include "Toefl.hpp"
+#include <string> //you will have to use string in C++
+
+/*
+Student is the parent class of InternationalStudent and Domestic Student. An object in this class stores a first and
+last name, a CGPA score (out of 4.33), A research score (out of 100), and an ID. Each private member has a get() function.
+Student also has a default constructor, another constructor for initalizing the members, and a set function.
+*/
+
+
+
+
+
 class Student
 {
+
+	typedef Student* studentPtr;
+
+protected:
+
+
+	virtual void print(ostream& where) const;
+
 public:
-	//constructor used to initialize basic elements of a student, with FN = first name, LN = last name, gradept = cgpa, research = research score, id = application id
-	//pre condition: pass 5 parameters to describe a student, with first name, last name, cgpa, research score and application ID
-	//post condition: assigns the parameters to their corresponding private member variable
-	Student(string FN, string LN, float gradept, int research, int ID);
 
+	friend void merge( studentPtr domlist,  studentPtr intlist, studentPtr &Head, studentPtr &Tail);
 
-	//default student constructor
-	//post condition: initializes values to default ones
-	Student();
+	Student();	// default student constructor
+	Student(string first, string last, float cgpaSc, int researchSc, int idNum); // constructor for student with all parameters
+	void setStudent(string first, string last, float cgpaSc, int researchSc, int idNum); // set function for student to change values values of private members 
 
-	//pre condition: pass string input parameter to use for assiging the first name of a student
-	//post condition: assigns the passed name to private member variable first name
-	void set_firstname(string name1);
-
-	//post condition:return the first name of the student
-	string get_firstname() const;
-
-	//pre condition: pass a string parameter for changing the last name of the student
-	//post condition: assign the parameter to the last name varibale for the student
-	void set_lastname(string name2);
-
-	//post condition: return the first name of the student
-	string get_lastname() const;
-
-	//pre condition: pass a float value for the cgpa of the student
-	//post condition:changed the value of the cgpa of the student
-	void set_cgpa(float grade);
-
-	//post condition: return the value of the cgpa of the student
-	float get_cgpa() const;
-
-	//pre condition: pass an integer value for the research score of the student, to use as the new score
-	//post condition:changed the value of the research score of the student
-	void set_researchscore(int RS);
-
-	//post condition: return the research score of the student
-	int get_researchscore() const;
-
-	//pre condition: pass the integer value of the student id number for changing the current one
-	//post condition: changed the value of the student id number
-	void set_appID(int IDnum);
-
-	//post condition:return the value of the application id/student number of the student
-	int get_appID() const;
-
-	//pre condition:pass 2 student objects(or children of student) for comparing their cgpa's
-	//post condition:return 1 if stu1 has a greater cgpa, 0 if theyre equal, -1 if stu2 has a greater cgpa
-	friend int compareCGPA(Student stu1, Student stu2);
-
-	//pre condition: pass 2 student/student children objects to compare their research scores
-	//post condition:return 1 if stu1 has a greater RS, 0 if theyre equal, -1 if stu2 has a greater RS
-	friend int compareResearchScore(Student stu1, Student stu2);
-
-	//pre condition: pass 2 student/student children objects to compare their first names
-	//post condition:return 1 if stu1 preceeds in alphabet, 0 if theyre the same, and -1 if stu2 preceeds
-	friend int compareFirstName(Student stu1, Student stu2);
-
-	//pre condition: pass 2 student/student children objects to compare their last names
-	//post condition:return 1 if stu1 preceeds in alphabet, 0 if theyre the same, and -1 if stu2 preceeds
-	friend int compareLastName(Student stu1, Student stu2);
-
-	//post condition: checks cgpa, research score, and application ID for validity. If either fails, exit the program
-	void errorcheck();
-
-	//Student* getnextNode() const;
-	//void setnextNode(Student*node);
 	
+	friend studentPtr search(studentPtr &head, studentPtr &newnode, char& choice);
 
+	friend void insert(studentPtr stu, studentPtr &head, studentPtr &tail, studentPtr& newnode, const char& choice);
+
+
+	string get_firstname() const;
+	string get_lastname()const;
+	float get_cgpa()const;
+	int get_reScore()const;
+	int get_id()const;
+
+	virtual void set_link(studentPtr link);
+	virtual studentPtr get_link() const;
+	
+	// most of our friend functions are now in the student class, since we use a Student* and need access// however, we can still change dynamically allocated domestic and international students becuase of our virtual location
+	friend int compareCGPA(Student* stu1, Student* stu2);
+	friend int compareResearchScore(Student* stu1, Student* stu2);
+	friend int compareFirstName(Student *stu1, Student *stu2);
+	friend int compareLastName(Student *stu1, Student *stu2);
+	friend int compareLocation(const studentPtr& stu1, const studentPtr& stu2);
+
+	friend void threshold(studentPtr head, float cgpa, int research);
+
+	virtual void set_location(string prov);
+	virtual string get_location() const;
+	
+	friend void searchID(studentPtr head1, studentPtr head2, int num);
+	friend void searchCGPA(studentPtr head1, studentPtr head2, float num);
+	friend void searchReScore(studentPtr head1, studentPtr head2, int num);
+	friend void searchName(studentPtr head1, studentPtr head2, string first, string last);
+
+	friend studentPtr deleteSearch(studentPtr head, studentPtr temphead, char& choice, string first, string last);
+	friend void deleteStudent(studentPtr &head, studentPtr &tail, studentPtr &beforeDelete, char& choice);
+
+
+	friend ostream& operator <<(ostream& out, Student& domstu);
+
+	~Student();
 
 private:
-	//private member variables, where appID is the assigned application ID of the student
 	string firstname;
 	string lastname;
 	float cgpa;
-	int researchscore;
-	int appID;
-	//pointer to next node
-	//Student *nextNode;
+	int reScore; // Research Score
+	int id;
+	studentPtr link;
+	string location;
+
 };
 
+/*
+	DomesticStudent and InternationalStudent are child classes of Student which means that they would have acces to the functions and private
+	members of the Student class. The child class can also introduce new functions and private members, specific to the new child class
+*/
+
+class DomesticStudent : public Student // Child of Student
+{
+public:
+	typedef DomesticStudent* domesticStudentPtr;
+	typedef Student* studentPtr;
 
 
+	DomesticStudent(); // default constructor for domestic student
+	DomesticStudent(string first, string last, float cgpaSc, int researchSc, int idNum, string prov); // constructor with all parameters for domestic student
+	DomesticStudent(const DomesticStudent& domestic); // copy constructor
+
+	virtual void set_location(string prov); // set functions to change value of province private member
+	virtual string get_location() const;
+
+	virtual void print(ostream& out) const;
+	friend ostream& operator <<(ostream& out, DomesticStudent& domstu);
+
+	void operator =(const DomesticStudent& right_side);
+
+	//friend studentPtr searchDom(studentPtr &head, studentPtr &newdom, char& choice);
+	//friend void insertDom(studentPtr temp, studentPtr &head, studentPtr &tail, const char& choice, string first, string last, float cgpaSc, int researchSc, int idNum, string prov);
 
 
-#endif //STUDENT_H
+	~DomesticStudent();
+
+private:
+	string province;
+
+};
+
+class InternationalStudent : public Student
+{
+public:
+
+	typedef InternationalStudent* internationalStudentPtr;
+	typedef Student* studentPtr;
+
+	InternationalStudent(); // default constructor for international student
+	InternationalStudent(string first, string last, float cgpaSc, int researchSc, int idNum, string countryName, int reads, int listen, int speak, int writes);
+	InternationalStudent(const InternationalStudent&);
+
+	void setInternationalScores(int reads, int listen, int speak, int writes); // set function for Toefl scores
+
+	
+
+
+	virtual void print(ostream& where) const;
+	friend ostream& operator <<(ostream& out, InternationalStudent& intstu);
+	void operator =(const  InternationalStudent& right_side);
+
+	virtual void set_location(string prov); // set functions to change value of province private member
+	virtual string get_location() const;
+
+
+	// simple get function to use values from private members
+	int get_read() const;
+	int get_write() const;
+	int get_listen() const;
+	int get_speak()const;
+	int get_totals()const;
+	~InternationalStudent();
+
+private:
+	string country;
+	ToeflScore scores;
+	
+};
+
+#endif
