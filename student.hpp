@@ -1,37 +1,29 @@
-/*
-Ensc 251
-Dr Zhenman Fang
-Diego Flores, Ansley Ang
-September 25, 2019
-Lab 1
-student.h
-
-This file makes all the declarations for the Student class. All child and parent classes have constructors, copy constructors, destructors, get and set functions. The Student class includes friend functions for
-comparing first name, last name, cgpa, and research score. Domestic and International Student have similar compare functions for province and country. There is also
-a declaration for the overloaded '<<' and '=' for each child.
-
-
-*/
-
-
 #ifndef STUDENT_H
 #define STUDENT_H
 
 
 //header file student.hpp to declare your classes
 using namespace std; //use namespace std
-#include "Toefl.hpp"
 #include <string> //you will have to use string in C++
 
-/*
-Student is the parent class of InternationalStudent and Domestic Student. An object in this class stores a first and
-last name, a CGPA score (out of 4.33), A research score (out of 100), and an ID. Each private member has a get() function.
-Student also has a default constructor, another constructor for initalizing the members, and a set function.
-*/
-
-
-
-
+class ToeflScore
+{
+public:
+	ToeflScore();
+	ToeflScore(int reads, int listen, int speak, int writes);
+	void setToefl(int reads, int listen, int speak, int writes);
+	int get_reading()const;
+	int get_listening()const;
+	int get_speaking()const;
+	int get_writing()const;
+	int get_total()const;
+private:
+	int reading;
+	int listening;
+	int speaking;
+	int writing;
+	int total;
+};
 
 class Student
 {
@@ -49,9 +41,9 @@ public:
 
 	Student();	// default student constructor
 	Student(string first, string last, float cgpaSc, int researchSc, int idNum); // constructor for student with all parameters
-	void setStudent(string first, string last, float cgpaSc, int researchSc, int idNum); // set function for student to change values values of private members 
+	void setStudent(string first, string last, float cgpaSc, int researchSc, int idNum); // set function for student to change values values of private members
 
-	
+
 	friend studentPtr search(studentPtr &head, studentPtr &newnode, char& choice);
 
 	friend void insert(studentPtr stu, studentPtr &head, studentPtr &tail, studentPtr& newnode, const char& choice);
@@ -65,7 +57,7 @@ public:
 
 	virtual void set_link(studentPtr link);
 	virtual studentPtr get_link() const;
-	
+
 	// most of our friend functions are now in the student class, since we use a Student* and need access// however, we can still change dynamically allocated domestic and international students becuase of our virtual location
 	friend int compareCGPA(Student* stu1, Student* stu2);
 	friend int compareResearchScore(Student* stu1, Student* stu2);
@@ -77,7 +69,7 @@ public:
 
 	virtual void set_location(string prov);
 	virtual string get_location() const;
-	
+
 	friend void searchID(studentPtr head1, studentPtr head2, int num);
 	friend void searchCGPA(studentPtr head1, studentPtr head2, float num);
 	friend void searchReScore(studentPtr head1, studentPtr head2, int num);
@@ -150,7 +142,7 @@ public:
 
 	void setInternationalScores(int reads, int listen, int speak, int writes); // set function for Toefl scores
 
-	
+
 
 
 	virtual void print(ostream& where) const;
@@ -172,7 +164,7 @@ public:
 private:
 	string country;
 	ToeflScore scores;
-	
+
 };
 
 #endif

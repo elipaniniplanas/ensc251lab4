@@ -1,21 +1,6 @@
-/*
-
-Ensc 251
-Dr Zhenman Fang
-Diego Flores, Ansley Ang
-September 25, 2019
-Lab 1
-student.cpp
-
-This file contains all the functions of the Student class, including constructors for all parent and child classes (InternationalStudent and DomesticStudent).
-The Student set function error checks the parameters before setting first name, last name, cgpa, research score, and ID number. DomesticStudent includes
-the student's province. InternationalStudent checks the student's country as well as the TOEFL score (from the ToeflScore class).
-
-*/
-
 //student.cpp to implement your classes
 #include "student.hpp"
-#include <iostream> 
+#include <iostream>
 #include <cstdlib>
 #include <iomanip>
 
@@ -24,6 +9,92 @@ using namespace std;
 typedef Student* studentPtr;
 typedef DomesticStudent* domesticStudentPtr;
 typedef InternationalStudent* internationalStudentPtr;
+
+ToeflScore::ToeflScore() // default constructor assigns all values to 0
+{
+	reading = 0;
+	listening = 0;
+	speaking = 0;
+	writing = 0;
+}
+
+ToeflScore::ToeflScore(int reads, int listen, int speak, int writes) // sets all the values from the toefl score
+{
+	reading = reads;
+	listening = listen;
+	speaking = speak;
+	writing = writes;
+
+}
+
+void ToeflScore::setToefl(int reads, int listen, int speak, int writes)
+{
+
+	// all the Toefl scores have to be between the range of 0 to 30
+	// this is just a simple error check for all the values
+
+	if (reads <= 30 && reads >= 0)
+	{
+		reading = reads;
+	}
+	else
+	{
+		cerr << "Reading Score is not Valid.\n Exiting program.\n";
+		exit(0);
+	}
+
+	if (listen <= 30 && listen >= 0) {
+		listening = listen;
+	}
+	else
+	{
+		cerr << "Listening Score is not Valid.\n Exiting program.\n";
+		exit(1);
+	}
+
+	if (speak <= 30 && speak >= 0) {
+		speaking = speak;
+	}
+	else {
+		cerr << "Speaking Score is not Valid.\n Exiting program.\n";
+		exit(2);
+	}
+
+	if (writes <= 30 && writes >= 0) {
+		writing = writes;
+	}
+	else {
+		cerr << "Listening Score is not Valid.\n Exiting program.\n";
+		exit(3);
+	}
+
+
+	total = reads + listen + speak + writes;
+
+}
+
+// Get functions for the class Toeflscore
+
+int ToeflScore::get_reading()const
+{
+	return reading;
+}
+int ToeflScore::get_listening()const
+{
+	return listening;
+}
+int ToeflScore::get_speaking()const
+{
+	return speaking;
+}
+int ToeflScore::get_writing()const
+{
+	return writing;
+}
+int ToeflScore::get_total()const
+{
+	return total;
+}
 
 Student::Student() { // sets all values for the student class to zero
 
@@ -50,7 +121,7 @@ void Student::print(ostream& where) const
 // Student destructor
 Student::~Student() {
 
-	
+
 }
 
 DomesticStudent::DomesticStudent()
@@ -61,7 +132,7 @@ DomesticStudent::DomesticStudent(string first, string last, float cgpaSc, int re
 {
 	setStudent(first, last, cgpaSc, researchSc, idNum);
 	set_location(prov);
-	
+
 }
 DomesticStudent::DomesticStudent(const DomesticStudent& domestic) { //Domestic copy constructor
 
@@ -69,7 +140,7 @@ DomesticStudent::DomesticStudent(const DomesticStudent& domestic) { //Domestic c
 
 	stu.set_location(domestic.get_location());
 	stu.setStudent(domestic.get_firstname(), domestic.get_lastname(), domestic.get_cgpa(), domestic.get_reScore(), domestic.get_id());
-	
+
 };
 
 // DomesticStudent destructor
@@ -88,7 +159,7 @@ InternationalStudent::InternationalStudent(string first, string last, float cgpa
 	setStudent(first, last, cgpaSc, researchSc, idNum);
 	set_location(countryName);
 	setInternationalScores(reads, listen, speak, writes);
-	
+
 }
 InternationalStudent::InternationalStudent(const InternationalStudent& international) { // International copy constructor
 
@@ -97,7 +168,7 @@ InternationalStudent::InternationalStudent(const InternationalStudent& internati
 	stu.set_location(international.get_location());
 	stu.setInternationalScores(international.get_read(), international.get_listen(), international.get_speak(), international.get_write());
 	stu.setStudent(international.get_firstname(), international.get_lastname(), international.get_cgpa(), international.get_reScore(), international.get_id());
-	
+
 };
 
 
@@ -109,7 +180,7 @@ InternationalStudent::~InternationalStudent() {
 
 //////////////////////  Friend Compare Functions //////////////////////
 
-int compareCGPA(Student *stu1, Student *stu2) 
+int compareCGPA(Student *stu1, Student *stu2)
 {	// return  1 - stu1 > stu2
 	// return  2 - stu1 < stu2
 	// return  3 - stu1 == stu2
@@ -225,20 +296,20 @@ int compareLastName(Student *stu1, Student *stu2)
 		return 2;
 	}
 }
-int compareLocation(const studentPtr& stu1, const studentPtr& stu2) // we have reworked the compare function so that we no longer need 2 seperate functions for domestic and international 
+int compareLocation(const studentPtr& stu1, const studentPtr& stu2) // we have reworked the compare function so that we no longer need 2 seperate functions for domestic and international
 {
 	// return  1 - stu1 goes before stu2
-	// return  2 - stu1 goes after stu2 
+	// return  2 - stu1 goes after stu2
 	// return  3 - stu1 and stu2 are equal
 	int i = 0;
 
 	while (stu1->get_location()[i] != '\0' && stu2->get_location()[i] != '\0') // depending on the type of object the pointers point to, the get_location will get either province or country!!
 	{
-		if (stu1->get_location()[i] > stu2->get_location()[i]) 
+		if (stu1->get_location()[i] > stu2->get_location()[i])
 		{
 			return 2;
 		}
-		else if (stu1->get_location()[i] < stu2->get_location()[i]) 
+		else if (stu1->get_location()[i] < stu2->get_location()[i])
 		{
 			return 1;
 		}
@@ -346,21 +417,21 @@ void DomesticStudent::print(ostream& out) const
 {
 
 
-	cout << setw(15) << left << get_firstname() 
-		<< setw(15) << left << get_lastname() 
-		<< setw(15) << left << province 
-		<< setw(10) << left << get_cgpa() 
-		<< setw(18) << left << get_reScore() 
+	cout << setw(15) << left << get_firstname()
+		<< setw(15) << left << get_lastname()
+		<< setw(15) << left << province
+		<< setw(10) << left << get_cgpa()
+		<< setw(18) << left << get_reScore()
 		<< setw(15) << left << get_id()  << endl;
 
 }
 
-string DomesticStudent::get_location() const // virtual get_location returns province instead of location private member 
+string DomesticStudent::get_location() const // virtual get_location returns province instead of location private member
 {
 	return province;
 }
 
-ostream& operator <<(ostream& out, Student& stu) { 
+ostream& operator <<(ostream& out, Student& stu) {
 	stu.print(out);
 	return out;
 }
@@ -369,11 +440,11 @@ ostream& operator <<(ostream& out, Student& stu) {
 // Overload for the Domestic '<<' operator
 ostream& operator <<(ostream& out, DomesticStudent& domstu)
 {
-	out << setw(15) << left << domstu.get_firstname() 
-		<< setw(15) << left << domstu.get_lastname() 
-		<< setw(15) << left << domstu.province 
-		<< setw(10) << left << domstu.get_cgpa() 
-		<< setw(18) << left << domstu.get_reScore() 
+	out << setw(15) << left << domstu.get_firstname()
+		<< setw(15) << left << domstu.get_lastname()
+		<< setw(15) << left << domstu.province
+		<< setw(10) << left << domstu.get_cgpa()
+		<< setw(18) << left << domstu.get_reScore()
 		<< setw(15) << left << domstu.get_id()  << endl;
 	return out;
 }
@@ -410,16 +481,16 @@ int InternationalStudent::get_totals()const
 ostream& operator <<(ostream& out, InternationalStudent& intstu)
 {
 
-	out << setw(15) << left << intstu.get_firstname() 
-		<< setw(15) << left << intstu.get_lastname() 
-		<< setw(15) << left << intstu.get_location()  
-		<< setw(10) << left << intstu.get_cgpa() 
-		<< setw(18) << left << intstu.get_reScore() 
-		<< setw(15) << left << intstu.get_id() 
-		<< setw(10) << left << intstu.get_totals()  
-		<< setw(10) << left << intstu.get_read()  
-		<< setw(10) << left << intstu.get_listen() 
-		<< setw(10) << left << intstu.get_speak() 
+	out << setw(15) << left << intstu.get_firstname()
+		<< setw(15) << left << intstu.get_lastname()
+		<< setw(15) << left << intstu.get_location()
+		<< setw(10) << left << intstu.get_cgpa()
+		<< setw(18) << left << intstu.get_reScore()
+		<< setw(15) << left << intstu.get_id()
+		<< setw(10) << left << intstu.get_totals()
+		<< setw(10) << left << intstu.get_read()
+		<< setw(10) << left << intstu.get_listen()
+		<< setw(10) << left << intstu.get_speak()
 		<< setw(10) << left << intstu.get_write()  << endl;
 
 	return out;
@@ -429,16 +500,16 @@ ostream& operator <<(ostream& out, InternationalStudent& intstu)
 void InternationalStudent::print(ostream& where) const
 {
 
-	cout << setw(15) << left << get_firstname() 
-		<< setw(15) << left << get_lastname() 
-		<< setw(15) << left << get_location() 
-		<< setw(10) << left << get_cgpa() 
-		<< setw(18) << left << get_reScore() 
-		<< setw(18) << left << get_id() 
-		<< setw(10) << left << get_totals() 
-		<< setw(10) << left << get_read() 
-		<< setw(10) << left << get_listen() 
-		<< setw(10) << left << get_speak() 
+	cout << setw(15) << left << get_firstname()
+		<< setw(15) << left << get_lastname()
+		<< setw(15) << left << get_location()
+		<< setw(10) << left << get_cgpa()
+		<< setw(18) << left << get_reScore()
+		<< setw(18) << left << get_id()
+		<< setw(10) << left << get_totals()
+		<< setw(10) << left << get_read()
+		<< setw(10) << left << get_listen()
+		<< setw(10) << left << get_speak()
 		<< setw(10) << left << get_write()  << endl;
 }
 
@@ -523,7 +594,7 @@ studentPtr search(studentPtr &head, studentPtr &newnode, char& choice) // Functi
 		if (compareResearchScore(temp2, newnode) == 3) {
 
 			while (temp2->get_link() != nullptr && compareCGPA(temp2, newnode) != 2 && compareCGPA(temp2, newnode) != 3 && compareResearchScore(temp2, newnode) == 3) {
-				temp = temp2; // both temp and temp2 traverse the list at the same time, but temp2 is one node ahead 
+				temp = temp2; // both temp and temp2 traverse the list at the same time, but temp2 is one node ahead
 				temp2 = temp2->get_link();
 
 			}
@@ -598,7 +669,7 @@ void searchID(studentPtr head1, studentPtr head2, int num) // this function chec
 	temp2 = head2;
 	if (temp1 == nullptr && temp2 == nullptr)
 	{
-		cout << "There is no student with the student number " << num << endl; 
+		cout << "There is no student with the student number " << num << endl;
 	}
 	else
 	{
@@ -615,7 +686,7 @@ void searchID(studentPtr head1, studentPtr head2, int num) // this function chec
 
 				}
 				temp1 = temp1->get_link();
-				
+
 			}
 		}
 
@@ -750,7 +821,7 @@ void searchName(studentPtr head1, studentPtr head2, string first, string last) /
 	temp2 = head2;
 	if (temp1 == nullptr && temp2 == nullptr)
 	{
-		
+
 		cout << "There is no student with the name " << first << " " << last << endl;
 	}
 
@@ -813,7 +884,7 @@ string InternationalStudent::get_location() const
 void merge( studentPtr domlist,  studentPtr intlist, studentPtr &Head, studentPtr &Tail) {
 
 	studentPtr temp = Head; // temporary pointer
-	
+
 	int counter = 0;
 
 
@@ -823,12 +894,12 @@ void merge( studentPtr domlist,  studentPtr intlist, studentPtr &Head, studentPt
 		if (counter == 0) { // this checks if the new node has priority over the head node. If it does, we need to set a new head
 			if (domlist->get_link() == nullptr && intlist->get_link() == nullptr) {
 				cerr << "Both lists are empty" << endl;
-				
+
 			}
 			else if (domlist->get_link() == nullptr) { // if only domlist is empty the intlist becomes the head
 				Head = intlist;
 				temp = intlist;
-				if (intlist->get_link() != nullptr) { 
+				if (intlist->get_link() != nullptr) {
 					intlist = intlist->get_link();
 				}
 				else {
@@ -853,7 +924,7 @@ void merge( studentPtr domlist,  studentPtr intlist, studentPtr &Head, studentPt
 					domlist = domlist->get_link();
 				}
 
-				
+
 			}
 			else if (compareResearchScore(domlist, intlist) == 2) {  // if the international student research score is bigger than the domestic student then the international student becomes the head
 
@@ -865,7 +936,7 @@ void merge( studentPtr domlist,  studentPtr intlist, studentPtr &Head, studentPt
 			}
 			else {
 				// if the domestic student and international student have the same research score we check the CGPA scores
-				if (compareCGPA(domlist, intlist) == 1) { 
+				if (compareCGPA(domlist, intlist) == 1) {
 					Head = domlist;
 					temp = domlist;
 					if (domlist->get_link() != nullptr) {// if the domestic student CGPA score is bigger than the international student's then the domestic student becomes the head
@@ -889,7 +960,7 @@ void merge( studentPtr domlist,  studentPtr intlist, studentPtr &Head, studentPt
 				}
 
 			}
-			
+
 
 		}
 		else if (domlist->get_link() == nullptr) {// if the domestic student list is empty then the rest of the list will be the international students
@@ -1043,7 +1114,7 @@ studentPtr deleteSearch(studentPtr head, studentPtr temphead, char& choice, stri
 	studentPtr temp2 = new Student(first, last, 4, 100, 20200000);
 	studentPtr temp3 = nullptr;
 	studentPtr temp4 = head;
-	
+
 	if (temp == nullptr)
 	{
 		return nullptr; // this means the list is empty
@@ -1087,9 +1158,9 @@ studentPtr deleteSearch(studentPtr head, studentPtr temphead, char& choice, stri
 
 	}
 
-	
+
 		return nullptr;
-	
+
 
 
 }
@@ -1098,7 +1169,7 @@ void threshold(studentPtr head, float cgpa, int research) // this function takes
 {
 	cout << "These students are admitted into SFU!" << endl;
 
-	studentPtr temp = head; 
+	studentPtr temp = head;
 
 	int counter = 0;
 	temp = head;
@@ -1114,21 +1185,19 @@ void threshold(studentPtr head, float cgpa, int research) // this function takes
 		{
 			if (temp->get_cgpa() >= cgpa && temp->get_reScore() >= research)
 			{
-				
+
 				cout << *temp;
 				counter++;
-				
+
 			}
 			temp = temp->get_link();
-			
+
 		}
-		
+
 	}
 	if(counter == 0)
 	{
 		cout << "No students admitted" << endl;
 	}
-	
+
 }
-
-

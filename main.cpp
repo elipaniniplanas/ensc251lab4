@@ -1,21 +1,4 @@
-/*
-
-Ensc 251
-Dr Zhenman Fang
-Diego Flores, Ansley Ang
-September 25, 2019
-Lab 2
-main.cpp
-
-This program gathers Domestic or International student information from text files and stores the data into
-a dynamic array of objects (of class DomesticStudent or InternationalStudent). The program asks for user input,
-asking how they want to sort the Students, first choosing domestic or international, then sorting by first name,
-last name, cpga, research score, province, or country. The student information is then displayed on the console.
-
-*/
-
-
-//main.cpp, put your driver code here, 
+//main.cpp, put your driver code here,
 //you can manipulate your class objects here
 #include <iostream> //cin and cout
 #include <fstream> //file processing
@@ -25,15 +8,7 @@ last name, cpga, research score, province, or country. The student information i
 #include "student.hpp"
 #include<stdio.h>
 
-/*I provide example code here to help you read the input
- *data from a file, so that you can focus on creating
- *and manipulating classes and objects
- */
-
-
-
 int main() {
-
 
 	char sortDom = 'p';
 	char sortInt = 'p';
@@ -68,38 +43,19 @@ int main() {
 
 	getline(domesticFile, line);
 
-
-	/*Keep reading the rest of the lines in domestic-stu.txt.
-	 *In the example code here, I will read each data separated
-	 *by a comma, and then print it out to the screen.
-	 *In your lab assignment 1, you should use these read data
-	 *to initialize your DomesticStudent object. Then you can
-	 *use get and set functions to manipulate your object, and
-	 *print the object content to the screen
-	 */
-
-
-	 // Dynamic array of DomesticStudent 
-
-
 	cout << "------------------------------------------------------------------------------------------------" << endl;
-	cout << setw(15) << left << "First Name" 
-		<< setw(15) << left << "Last Name" 
-		<< setw(15) << left << "Province" 
-		<< setw(10) << left << "CGPA" 
-		<< setw(18) << left << "Research Score" 
+	cout << setw(15) << left << "First Name"
+		<< setw(15) << left << "Last Name"
+		<< setw(15) << left << "Province"
+		<< setw(10) << left << "CGPA"
+		<< setw(18) << left << "Research Score"
 		<< setw(15) << left << "Student Number"  << endl;
 	cout << "------------------------------------------------------------------------------------------------" << endl;
 	int stu_count = 0;
 	int stu_num = 0;
 
 	while (getline(domesticFile, line)) {
-		/*process each line, get each field separated by a comma.
-		 *We use istringstream to handle it.
-		 *Note in this example code here, we assume the file format
-		 *is perfect and do NOT handle error cases. We will leave the
-		 *error and exception handling of file format to Lab Assignment 4
-		 */
+
 		istringstream ss(line);
 
 		string firstName, lastName, province, s_cgpa, s_researchScore;
@@ -164,16 +120,16 @@ int main() {
 
 	stu_count = 0;
 	cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
-	cout << setw(15) << left << "First Name" 
-		<< setw(15) << left << "Last Name" 
-		<< setw(15) << left << "Country" 
-		<< setw(10) << left << "CGPA" 
-		<< setw(18) << left << "Research Score" 
-		<< setw(18) << left << "Student Number" 
-		<< setw(10) << left << "Total" 
-		<< setw(10) << left << "Reading" 
-		<< setw(10) << left << "Listening" 
-		<< setw(10) << left << "Speaking" 
+	cout << setw(15) << left << "First Name"
+		<< setw(15) << left << "Last Name"
+		<< setw(15) << left << "Country"
+		<< setw(10) << left << "CGPA"
+		<< setw(18) << left << "Research Score"
+		<< setw(18) << left << "Student Number"
+		<< setw(10) << left << "Total"
+		<< setw(10) << left << "Reading"
+		<< setw(10) << left << "Listening"
+		<< setw(10) << left << "Speaking"
 		<< setw(10) << left << "Writing"  << endl;
 	cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
 
@@ -262,7 +218,7 @@ int main() {
 	int homeChoice = 0;
 	char gotoHome = 'y';
 	// INTERFACE
-	while (gotoHome == 'y' || gotoHome == 'Y') //This while loop is for asking the user if they want to come back to homepage 
+	while (gotoHome == 'y' || gotoHome == 'Y') //This while loop is for asking the user if they want to come back to homepage
 	{
 		gotoHome = 'n';
 		char searchAgain = 'y';
@@ -292,8 +248,8 @@ int main() {
 		{
 			cerr << "ERROR: Please select a proper option" << endl;
 			homeChoice = 0;
-			
-			
+
+
 			continue;
 		}
 
@@ -314,7 +270,7 @@ int main() {
 				float cgpaChoice = 0;
 				firstname = "";
 				string lastname = "";
-				cout << "What would you like to search?" << endl; 
+				cout << "What would you like to search?" << endl;
 				cout << "[N] Full Name " << endl;
 				cout << "[C] CGPA" << endl << "[R] Research Score " << endl;
 				cout << "[I] Student ID" << endl;
@@ -327,8 +283,8 @@ int main() {
 				{
 					cerr << "ERROR: Please select a proper searching category" << endl;
 					searchType = 'p';
-					
-					
+
+
 					continue;
 				}
 				// SEARCH FUNCTIONS
@@ -400,8 +356,8 @@ int main() {
 				{
 					cerr << "ERROR: Please select a proper student type" << endl;
 					studType = 'p';
-					
-					
+
+
 					continue;
 				}
 
@@ -420,27 +376,27 @@ int main() {
 					cin >> lastName;
 					cout << endl;
 
-					
+
 						cout << "Please enter the student's CGPA" << endl;
 						cin >> cgpa;
 						cout << endl;
-						
-					
 
-				
+
+
+
 						cout << "Please enter the student's research score" << endl;
 						cin >> researchScore;
 						cout << endl;
-						
-					
-					
-					
+
+
+
+
 						cout << "Please enter the student's province" << endl;
 						cin >> province;
-						
 
-						
-						
+
+
+
 
 						if (cgpa < 0 || cgpa>4.33) {
 							cerr << "Invalid CGPA. CGPA must be between 0 and 4.33\nThe student will not be considered\n";
@@ -465,8 +421,8 @@ int main() {
 								tempdom = tempdom->get_link();
 							}
 						}
-					
-		
+
+
 				}
 				else
 				{
@@ -487,53 +443,53 @@ int main() {
 					cin >> lastName;
 					cout << endl;
 
-					
+
 						cout << "Please enter the student's CGPA" << endl;
 						cin >> cgpa;
 						cout << endl;
-						
-					
 
-					
+
+
+
 						cout << "Please enter the student's research score" << endl;
 						cin >> researchScore;
 						cout << endl;
-						
+
 
 					cout << "Please enter the student's country" << endl;
 					cin >> Country;
 
-				
+
 						cout << "Please enter the student's Toefl reading score" << endl;
 						cin >> toeflReading;
 						cout << endl;
-						
-					
-				
 
-					
+
+
+
+
 						cout << "Please enter the student's Toefl listening score" << endl;
 						cin >> toeflListening;
 						cout << endl;
-						
-					
 
-					
+
+
+
 						cout << "Please enter the student's Toefl speaking score" << endl;
 						cin >> toeflSpeaking;
 						cout << endl;
-						
-					
 
-					
+
+
+
 						cout << "Please enter the student's Toefl writing score" << endl;
 						cin >> toeflWriting;
 						cout << endl;
-						
 
 
-						
-						
+
+
+
 
 						if (cgpa < 0 || cgpa>4.33) {
 							cerr << "Invalid CGPA. CGPA must be between 0 and 4.33\nThe student will not be considered\n";
@@ -570,7 +526,7 @@ int main() {
 							}
 							delete tempint;
 						}
-					
+
 				}
 				stu_num++;
 				cout << endl;
@@ -608,8 +564,8 @@ int main() {
 			{
 				cerr << "ERROR: Please select a proper option" << endl;
 				delChoice = 'p';
-				
-				
+
+
 				continue;
 			}
 
@@ -646,7 +602,7 @@ int main() {
 					//if (confirmation == 'y' || confirmation == 'Y') {
 						deleteStudent(domHead, domTail, temp1, sortDom);
 					//}
-					
+
 				}
 				while (temp2 != nullptr)
 				{
@@ -716,7 +672,7 @@ int main() {
 			cout << "Would you like to delete another student?" << endl;
 			cout << "press 'y' to delete again:  ";
 			cin >> deleteAnother;
-		
+
 			if (deleteAnother != 'y' && deleteAnother != 'Y')
 			{
 				break;
@@ -731,7 +687,7 @@ int main() {
 		}
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		}
-		
+
 
 		cout << endl;
 		cout << "Would you like to go back to the homepage?" << endl;
@@ -748,14 +704,14 @@ int main() {
 
 			continue;
 		}
-	
+
 
 
 
 	}
 
 	merge(domHead, intHead, head, tail);
-		
+
 
 	studentPtr temp = new Student;
 	temp = head;
@@ -771,13 +727,13 @@ int main() {
 	}
 	delete temp;
 	cout << endl;
-	
-	
+
+
 	homeChoice = 0;
 	gotoHome = 'y';
 
 	// INTERFACE
-	while (gotoHome == 'y' || gotoHome == 'Y') //This while loop is for asking the user if they want to come back to homepage 
+	while (gotoHome == 'y' || gotoHome == 'Y') //This while loop is for asking the user if they want to come back to homepage
 	{
 		gotoHome = 'n';
 		char searchAgain = 'y';
@@ -807,8 +763,8 @@ int main() {
 		{
 			cerr << "ERROR: Please select a proper option" << endl;
 			homeChoice = 0;
-			
-			
+
+
 			continue;
 		}
 
@@ -823,8 +779,8 @@ int main() {
 			int researchScore = -1;
 
 			while (cgpa < 0 || cgpa >4.33) {
-				
-				
+
+
 				cout << "Enter the CGPA threshold for SFU admission" << endl;
 				cin >> cgpa;
 				if ((cgpa < 0 || cgpa >4.33)) {
@@ -832,20 +788,20 @@ int main() {
 				}
 
 			}
-			
+
 			while (researchScore < 0 || researchScore > 100) {
-				
-				
+
+
 				cout << "Enter the research score threshold for SFU admission" << endl;
 				cin >> researchScore;
 				if (researchScore < 0 || researchScore > 100) {
 					cerr << "Not a valid Research Score\nPlease Enter A Value from 0 to 100\n";
 				}
 			}
-				
+
 			////////////////////////////////////////     Code For Filtering           /////////////////////////////////////////////
 			threshold(head, cgpa, researchScore );
-			
+
 		}
 
 		else if (homeChoice == 1)
@@ -870,8 +826,8 @@ int main() {
 				{
 					cerr << "ERROR: Please select a proper searching category" << endl;
 					searchType = 'p';
-					
-					
+
+
 					continue;
 				}
 				// SEARCH FUNCTIONS
@@ -943,8 +899,8 @@ int main() {
 				{
 					cerr << "ERROR: Please select a proper student type" << endl;
 					studType = 'p';
-					
-					
+
+
 					continue;
 				}
 
@@ -963,25 +919,25 @@ int main() {
 					cin >> lastName;
 					cout << endl;
 
-					
+
 						cout << "Please enter the student's CGPA" << endl;
 						cin >> cgpa;
 						cout << endl;
-						
-					
 
-				
+
+
+
 						cout << "Please enter the student's research score" << endl;
 						cin >> researchScore;
 						cout << endl;
-						
-					
-					
-					
+
+
+
+
 						cout << "Please enter the student's province" << endl;
 						cin >> province;
-						
-					
+
+
 
 						if (cgpa < 0 || cgpa>4.33) {
 							cerr << "Invalid CGPA. CGPA must be between 0 and 4.33\nThe student will not be considered\n";
@@ -1006,8 +962,8 @@ int main() {
 								tempdom = tempdom->get_link();
 							}
 						}
-					
-		
+
+
 				}
 				else
 				{
@@ -1028,49 +984,49 @@ int main() {
 					cin >> lastName;
 					cout << endl;
 
-					
+
 						cout << "Please enter the student's CGPA" << endl;
 						cin >> cgpa;
 						cout << endl;
-						
-					
 
-					
+
+
+
 						cout << "Please enter the student's research score" << endl;
 						cin >> researchScore;
 						cout << endl;
-						
+
 
 					cout << "Please enter the student's country" << endl;
 					cin >> Country;
 
-				
+
 						cout << "Please enter the student's Toefl reading score" << endl;
 						cin >> toeflReading;
 						cout << endl;
-						
-					
-				
 
-					
+
+
+
+
 						cout << "Please enter the student's Toefl listening score" << endl;
 						cin >> toeflListening;
 						cout << endl;
-						
-					
 
-					
+
+
+
 						cout << "Please enter the student's Toefl speaking score" << endl;
 						cin >> toeflSpeaking;
 						cout << endl;
-						
-					
 
-					
+
+
+
 						cout << "Please enter the student's Toefl writing score" << endl;
 						cin >> toeflWriting;
 						cout << endl;
-						
+
 
 
 
@@ -1083,7 +1039,7 @@ int main() {
 					else if (toeflListening < 20 || toeflListening>30) {
 						cerr << "Invalid Toefl listening score. Listening scores must be between 20 and 30\nThe student will not be considered\n";
 					}
-					
+
 					else if (toeflReading < 20 || toeflReading>30) {
 						cerr << "Invalid Toefl reading score. Reading scores must be between 20 and 30\nThe student will not be considered\n";
 					}
@@ -1099,7 +1055,7 @@ int main() {
 					else {
 						studentPtr inInt = new InternationalStudent(firstName, lastName, cgpa, researchScore, stu_num + 20200000, Country, toeflReading, toeflListening, toeflSpeaking, toeflWriting);
 						insert((search(head, inInt, sortInt)), head, tail, inInt, sortInt);
-						
+
 						studentPtr tempint = new InternationalStudent;
 						tempint = head;
 						while (tempint != nullptr)
@@ -1109,7 +1065,7 @@ int main() {
 						}
 						delete tempint;
 					}
-					
+
 				}
 
 				stu_num++;
@@ -1148,8 +1104,8 @@ int main() {
 			{
 				cerr << "ERROR: Please select a proper option" << endl;
 				delChoice = 'p';
-				
-				
+
+
 				continue;
 			}
 
@@ -1164,7 +1120,7 @@ int main() {
 				cout << endl;
 
 				studentPtr temp1 = head;
-				
+
 
 
 
@@ -1186,9 +1142,9 @@ int main() {
 					//if (confirmation == 'y' || confirmation == 'Y') {
 						deleteStudent(head, tail, temp1, sortDom);
 					//}
-					
+
 				}
-				
+
 
 				studentPtr tempdom;
 				tempdom = head;
@@ -1201,18 +1157,18 @@ int main() {
 
 				cout << endl;
 
-			
+
 			}
 			else
 			{
 				studentPtr temp = head;
-		
+
 				char heta = 'b';
 				deleteStudent(head, tail, temp, heta);
-			
 
 
-			
+
+
 				studentPtr tempdom;
 				tempdom = head;
 				while (tempdom != nullptr)
@@ -1220,14 +1176,14 @@ int main() {
 					cout << *tempdom;
 					tempdom = tempdom->get_link();
 				}
-				
+
 			}
 
 			cout << endl;
 			cout << "Would you like to delete another student?" << endl;
 			cout << "press 'y' to delete again:  ";
 			cin >> deleteAnother;
-			
+
 			if (deleteAnother != 'y' && deleteAnother != 'Y')
 			{
 				break;
@@ -1242,7 +1198,7 @@ int main() {
 		}
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		}
-		
+
 
 		cout << endl;
 		cout << "Would you like to go back to the homepage?" << endl;
@@ -1268,11 +1224,11 @@ int main() {
 		studentPtr temp = head;
 		head = head->get_link();
 
-		temp->set_link(nullptr); 
+		temp->set_link(nullptr);
 		delete temp;
 	}
 
-	
+
 	head = nullptr;
 	tail = nullptr;
 	intHead = nullptr;
