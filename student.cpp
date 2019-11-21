@@ -3,6 +3,10 @@
 #include <iostream>
 #include <cstdlib>
 #include <iomanip>
+#include <sstream>
+#include <string>
+#include <cctype>
+#include <algorithm>
 
 using namespace std;
 
@@ -223,15 +227,19 @@ int compareFirstName(Student *stu1, Student *stu2)
 	// return  1 - stu1 goes before stu2
 	// return  2 - stu1 goes after stu2
 	// return  3 - stu1 and stu2 are equal
+	string fname1 = stu1->get_firstname();
+	transform(fname1.begin(), fname1.end(), fname1.begin(), ::tolower);
+	string fname2 = stu2->get_firstname();
+	transform(fname2.begin(), fname2.end(), fname2.begin(), ::tolower);
 
 	int i = 0;
-	while (stu1->get_firstname()[i] != '\0' && stu2->get_firstname()[i] != '\0') // This loop is to check the end of the string (name)
+	while (fname1[i] != '\0' && fname2[i] != '\0') // This loop is to check the end of the string (name)
 	{
-		if (stu1->get_firstname()[i] > stu2->get_firstname()[i])  // We are following the ASCI characters. The letter Z is a bigger number than the letter A
+		if (fname1[i] > fname2[i])  // We are following the ASCI characters. The letter Z is a bigger number than the letter A
 		{
 			return 2;
 		}
-		else if (stu1->get_firstname()[i] < stu2->get_firstname()[i])
+		else if (fname1[i] < fname2[i])
 		{
 			return 1;
 		}
@@ -243,11 +251,11 @@ int compareFirstName(Student *stu1, Student *stu2)
 
 	}
 
-	if (stu1->get_firstname()[i] == stu2->get_firstname()[i])
+	if (fname1[i] == fname2[i])
 	{
 		return 3;
 	}
-	else if (stu1->get_firstname()[i] == '\0') // if stu1's name is shorter and all the other characters are the same as the other, it goes first
+	else if (fname1[i] == '\0') // if stu1's name is shorter and all the other characters are the same as the other, it goes first
 	{
 		return 1;
 	}
@@ -263,15 +271,18 @@ int compareLastName(Student *stu1, Student *stu2)
 	// return  1 - stu1 goes before stu2
 	// return  2 - stu1 goes after stu2
 	// return  3 - stu1 and stu2 are equal
-
+	string lname1 = stu1->get_lastname();
+	transform(lname1.begin(), lname1.end(), lname1.begin(), ::tolower);
+	string lname2 = stu2->get_lastname();
+	transform(lname2.begin(), lname2.end(), lname2.begin(), ::tolower);
 	int i = 0;
-	while (stu1->get_lastname()[i] != '\0' && stu2->get_lastname()[i] != '\0')
+	while (lname1[i] != '\0' && lname2[i] != '\0')
 	{
-		if (stu1->get_lastname()[i] > stu2->get_lastname()[i])
+		if (lname1[i] > lname2[i])
 		{
 			return 2;
 		}
-		else if (stu1->get_lastname()[i] < stu2->get_lastname()[i])
+		else if (lname1[i] < lname2[i])
 		{
 			return 1;
 		}
@@ -283,11 +294,11 @@ int compareLastName(Student *stu1, Student *stu2)
 
 	}
 
-	if (stu1->get_lastname()[i] == stu2->get_lastname()[i])
+	if (lname1[i] == lname2[i])
 	{
 		return 3;
 	}
-	else if (stu1->get_lastname()[i] == '\0')
+	else if (lname1[i] == '\0')
 	{
 		return 1;
 	}
@@ -812,7 +823,6 @@ void searchReScore(studentPtr head1, studentPtr head2, int num) // this function
 
 void searchName(studentPtr head1, studentPtr head2, string first, string last) // for search name, the function checks both lists to make sure both first and last names are the same as the input, and then prints the student
 {
-
 	studentPtr temp1;
 	studentPtr temp2;
 	studentPtr temp3 = new Student(first, last, 4, 100, 20200000);
@@ -874,7 +884,20 @@ string Student::get_location() const
 
 void InternationalStudent::set_location(string place) // International class virtual functions of location, sets and gets country instead of location
 {
-	country = place;
+	if(place == "Idian")
+	{
+		cout << "TYPO: Idian \nAutocorrected to 'India'" << endl;
+		country = "India";
+	}
+	else if(place != "Canada" && place != "China" && place != "India" && place != "Korea" && place != "Iran")
+	{
+		cerr << "ERROR: Invalid country entered" << endl;
+		exit(14);
+	}
+	else
+	{
+		country = place;
+	}
 }
 string InternationalStudent::get_location() const
 {
@@ -1199,5 +1222,45 @@ void threshold(studentPtr head, float cgpa, int research) // this function takes
 	{
 		cout << "No students admitted" << endl;
 	}
-
+}
+// checkline makes sure the data in a line from the txt file has the proper data
+bool checklineD(string &line)
+{
+	int counter = 0;
+	for(int i = 0; i<line.length(); i++)
+	{
+		if(string.at(i)==",")
+		{
+			counter++;
+		}
+	}
+	if (counter != 4)
+	{
+		cerr << "ERROR: line does not contain the right amount of fields" << endl;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+bool checklineI(string &line)
+{
+	int counter = 0;
+	for(int i = 0; i<line.length(); i++)
+	{
+		if(string.at(i)==",")
+		{
+			counter++;
+		}
+	}
+	if (counter != 8)
+	{
+		cerr << "ERROR: line does not contain the right amount of fields" << endl;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

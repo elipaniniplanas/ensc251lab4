@@ -1,13 +1,21 @@
 #compile and link the application
-all: main
+all: main unitTest
 
 #run the application
 run: main
 	./main
 
+#this will execute the unit test program
+test: unitTest
+		./unitTest
+
 #link main.o and student.o to executable main
 main: main.o student.o
 	g++ -g -o main main.o student.o
+
+#link unitTest.o to executable test
+unitTest: unitTest.o student.o
+	g++ -g -c unitTest unitTest.o
 
 #compile the main.cpp to main.o
 main.o: main.cpp
@@ -17,6 +25,10 @@ main.o: main.cpp
 student.o: student.cpp
 	g++ -g -c student.cpp
 
+#compile the unitTest.cpp to unitTest.o
+unitTest.o: unitTest.cpp
+	g++ -g -c unitTest.cpp
+
 #remove built files
 clean:
-	rm -rf main main.o student.o *~
+	rm -rf main main.o student.o unitTest.o *~

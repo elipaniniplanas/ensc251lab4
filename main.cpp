@@ -56,6 +56,11 @@ int main() {
 
 	while (getline(domesticFile, line)) {
 
+		if(checklineD(line))
+		{
+		return -1;
+		}
+
 		istringstream ss(line);
 
 		string firstName, lastName, province, s_cgpa, s_researchScore;
@@ -87,7 +92,7 @@ int main() {
 		stu_count++;
 		stu_num++;
 	}
-
+	// printing the list after completion
 	studentPtr tempdom;
 	tempdom = domHead;
 	while (tempdom != nullptr)
@@ -135,12 +140,11 @@ int main() {
 
 	while (getline(internationalFile, line)) {
 
-		/*process each line, get each field separated by a comma.
-		 *We use istringstream to handle it.
-		 *Note in this example code here, we assume the file format
-		 *is perfect and do NOT handle error cases. We will leave the
-		 *error and exception handling of file format to Lab Assignment 4
-		 */
+		if(checklineI(line))
+ 		{
+ 			return -1;
+ 		}
+
 		istringstream ss(line);
 
 		string firstName, lastName, Country, s_cgpa, s_researchScore, s_Reading, s_Listening, s_Speaking, s_Writing;
@@ -404,7 +408,7 @@ int main() {
 						else if (researchScore < 0 || researchScore>100) {
 							cerr << "Invalid research score. Research scores must be between 0 and 100\nThe student will not be considered\n";
 						}
-						else if (province != "BC" && province != "AB" & province != "ON" & province != "MB" && province != "NB" && province != "NL" && province != "YT" && province != "SK" && province != "NU" && province != "NS" && province != "QC" && province != "NT" && province != "NU" && province != "PE") {
+						else if (province != "BC" && province != "AB" && province != "ON" && province != "MB" && province != "NB" && province != "NL" && province != "YT" && province != "SK" && province != "NU" && province != "NS" && province != "QC" && province != "NT" && province != "NU" && province != "PE") {
 							cerr << "Invalid Province. \nPlease make sure the provinces are in their proper acronyms \nChoices:BC, AB, ON, MB, NB, NL, YT, SK, NU, NS, QC, NT, PE\nThe student will not be considered\n";
 						}
 						else {
