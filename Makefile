@@ -15,7 +15,7 @@ main: main.o student.o
 
 #link unitTest.o to executable test
 unitTest: unitTest.o student.o
-	g++ -g -c unitTest unitTest.o
+	g++ -g -c unitTest unitTest.o student.o
 
 #compile the main.cpp to main.o
 main.o: main.cpp
@@ -25,6 +25,7 @@ main.o: main.cpp
 student.o: student.cpp
 	g++ -g -c student.cpp
 
+#compile the unitTestMain.cpp to unitTest
 #compile the unitTest.cpp to unitTest.o
 unitTest.o: unitTest.cpp
 	g++ -g -c unitTest.cpp
