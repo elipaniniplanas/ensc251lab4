@@ -43,14 +43,14 @@ int main() {
 
 	getline(domesticFile, line);
 
-	cout << "------------------------------------------------------------------------------------------------" << endl;
-	cout << setw(15) << left << "First Name"
-		<< setw(15) << left << "Last Name"
-		<< setw(15) << left << "Province"
-		<< setw(10) << left << "CGPA"
-		<< setw(18) << left << "Research Score"
-		<< setw(15) << left << "Student Number"  << endl;
-	cout << "------------------------------------------------------------------------------------------------" << endl;
+	// cout << "------------------------------------------------------------------------------------------------" << endl;
+	// cout << setw(15) << left << "First Name"
+	// 	<< setw(15) << left << "Last Name"
+	// 	<< setw(15) << left << "Province"
+	// 	<< setw(10) << left << "CGPA"
+	// 	<< setw(18) << left << "Research Score"
+	// 	<< setw(15) << left << "Student Number"  << endl;
+	// cout << "------------------------------------------------------------------------------------------------" << endl;
 	int stu_count = 0;
 	int stu_num = 0;
 

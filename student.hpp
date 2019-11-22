@@ -69,6 +69,7 @@ public:
 
 	virtual void set_location(string prov);
 	virtual string get_location() const;
+	virtual string type() const;
 
 	friend void searchID(studentPtr head1, studentPtr head2, int num);
 	friend void searchCGPA(studentPtr head1, studentPtr head2, float num);
@@ -112,6 +113,7 @@ public:
 
 	virtual void set_location(string prov); // set functions to change value of province private member
 	virtual string get_location() const;
+	virtual string type() const;
 
 	virtual void print(ostream& out) const;
 	friend ostream& operator <<(ostream& out, DomesticStudent& domstu);
@@ -151,7 +153,7 @@ public:
 
 	virtual void set_location(string prov); // set functions to change value of province private member
 	virtual string get_location() const;
-
+	virtual string type() const;
 
 	// simple get function to use values from private members
 	int get_read() const;

@@ -587,7 +587,96 @@ studentPtr search(studentPtr &head, studentPtr &newnode, char& choice) // Functi
 			choice = 'H';
 			return temp;
 		}
+	}//
+	else
+	{
+		if (temp2 == nullptr) {
+			temp2 = temp;
+		}
+		while (temp2->get_link() != nullptr && compareResearchScore(temp2, newnode) != 2 && compareResearchScore(temp2, newnode) != 3) { // our while loop traverses the linked list until the temp2 links to null or we find the place we want to insert the node
+
+
+			temp = temp2; // both temp and temp2 traverse the list at the same time, but temp2 is one node ahead
+			temp2 = temp2->get_link();
+
+		}
+
+
+		if (compareResearchScore(temp2, newnode) == 3) {
+
+			while (temp2->get_link() != nullptr && compareCGPA(temp2, newnode) != 2 && compareCGPA(temp2, newnode) != 3 && compareResearchScore(temp2, newnode) == 3) {
+				temp = temp2; // both temp and temp2 traverse the list at the same time, but temp2 is one node ahead
+				temp2 = temp2->get_link();
+
+			}
+		}
+
+		if (compareCGPA(temp2, newnode) == 3 && compareResearchScore(temp2, newnode) == 3) {
+
+			while (temp2->get_link() != nullptr && compareLocation(temp2, newnode) != 2 && compareLocation(temp2, newnode) != 3 && compareResearchScore(temp2, newnode) == 3 && compareCGPA(temp2, newnode) == 3) {
+
+				temp = temp2; // both temp and temp2 traverse the list at the same time, but temp2 is one node ahead
+				temp2 = temp2->get_link();
+
+			}
+
+		}
 	}
+	// this if statement is really long, but basically it checks the last 2 nodes to determine if the new node should be a tail or not. The only reason it is long is because we are doing it based on the overall sort
+	if (temp2->get_link() == nullptr && ((compareResearchScore(temp, newnode) == 1 && compareResearchScore(temp2, newnode) == 1)) || (compareResearchScore(temp2, newnode) == 3 && compareCGPA(temp2, newnode) == 1 && compareCGPA(temp, newnode) == 1) || (compareResearchScore(temp2, newnode) == 3 && compareCGPA(temp2, newnode) == 3 && compareLocation(temp2, newnode) == 1 && compareLocation(temp, newnode) == 1)) { // if temp2 links to null and the new node has less priority over the last 2 nodes, we need a new tail
+		choice = 'T';
+		return temp2;
+	}
+	else {
+		choice = 'R'; // if not any of the other options, then the new node is a normal insert
+		return temp;
+	}
+
+
+
+}
+
+studentPtr monosearch(studentPtr &head, studentPtr &newnode, char& choice) // Function shows where the new node should be inserted, based on the overal sort
+{
+	// choice is a character variable that the user sends in, this tells us which type of insert we need
+	studentPtr temp;
+	studentPtr temp2 = nullptr;
+
+	temp = head;
+
+	if (temp != nullptr) { // First check if the list is empty or only has one node
+		temp2 = temp->get_link(); // Our implementation always has 2 pointers - one(temp2) for testing to see where to sort and one to send to the insert(temp)
+	}
+	else {
+		choice = 'B'; // if empty, we need to set both the head and tail to a new node
+		return temp;
+	}
+
+
+	if (compareResearchScore(temp, newnode) == 2 || compareResearchScore(temp, newnode) == 3) { // this checks if the new node has priority over the head node. If it does, we need to set a new head
+		if (compareResearchScore(temp, newnode) == 3)
+		{
+			if (compareCGPA(temp, newnode) == 3)
+			{
+				if (compareLocation(temp, newnode) == 2)
+				{
+					choice = 'H';
+					return temp;
+				}
+			}
+			else if (compareCGPA(temp, newnode) == 2)
+			{
+				choice = 'H';
+				return temp;
+			}
+
+		}
+		else
+		{
+			choice = 'H';
+			return temp;
+		}
+	}//
 	else
 	{
 		if (temp2 == nullptr) {
@@ -881,6 +970,14 @@ string Student::get_location() const
 {
 	return location;
 }
+string DomesticStudent::type() const
+{
+	return "DomesticStudent";
+}
+string Student::type() const
+{
+	return "Student";
+}
 
 void InternationalStudent::set_location(string place) // International class virtual functions of location, sets and gets country instead of location
 {
@@ -902,6 +999,10 @@ void InternationalStudent::set_location(string place) // International class vir
 string InternationalStudent::get_location() const
 {
 	return country;
+}
+string InternationalStudent::type() const
+{
+	return "InternationalStudent";
 }
 
 void merge( studentPtr domlist,  studentPtr intlist, studentPtr &Head, studentPtr &Tail) {

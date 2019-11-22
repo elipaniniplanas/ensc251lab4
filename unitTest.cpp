@@ -13,6 +13,40 @@ void testSearch()
 
 int main()
 {
+  char searchchoice;
+  string line;
+	ifstream domesticFile("domestic-stu.txt");
+	if (!domesticFile.is_open()) {
+		cout << "Unable to open file domestic-stu.txt" << endl;
+		return -1;
+	}
+  while (getline(domesticFile, line)) {
+		if(checklineD(line))
+		{
+		return -1;
+		}
+		istringstream ss(line);
+		string firstName, lastName, province, s_cgpa, s_researchScore;
+		float cgpa;
+		int researchScore;
+		//get firstName separated by comma
+		getline(ss, firstName, ',');
+		//get lastName separated by comma
+		getline(ss, lastName, ',');
+		//get province separated by comma
+		getline(ss, province, ',');
+		//get cpga separated by comma, and convert string to float
+		getline(ss, s_cgpa, ',');
+		cgpa = atof(s_cgpa.c_str());
+		//get researchScore separated by comma, and convert it to int
+		getline(ss, s_researchScore, ',');
+		researchScore = atoi(s_researchScore.c_str());
+		studentPtr inDom = new DomesticStudent(firstName, lastName, cgpa, researchScore, stu_num + 20200000, province);
+		insert((search(domHead, inDom, sortDom)), domHead, domTail, inDom, sortDom);
+		stu_count++;
+		stu_num++;
+	}
+	domesticFile.close();
   int userIn1;
   while (getline(iTestFile, line)) {
 		if(checklineI(line))
@@ -184,43 +218,54 @@ int main()
   }
   return 0;
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-void testInsertDom(studentPtr domhead, studentPtr domtail, int stu_num)
+bool testInsertDom(studentPtr domhead, studentPtr domtail, int stu_num)
 {
   cout<<"Testing the normal case"<<endl;
   studentPtr inDom = new DomesticStudent("Lucy", "Pevensie", 4.00, 90, stu_num + 20200000, "BC");
   insert((search(domHead, inDom, sortDom)), domHead, domTail, inDom, sortDom);
-  while()
-  if (compareResearchScore(temp, newnode) == 2 || compareResearchScore(temp, newnode) == 3) { // this checks if the new node has priority over the head node. If it does, we need to set a new head
-		if (compareResearchScore(temp, newnode) == 3)
-		{
-			if (compareCGPA(temp, newnode) == 3)
-			{
-				if (compareLocation(temp, newnode) == 2)
-				{
-					choice = 'H';
-					return temp;
-				}
-			}
-			else if (compareCGPA(temp, newnode) == 2)
-			{
-				choice = 'H';
-				return temp;
-			}
+  if(head == NULL)
+  {
+    cerr<<"Insertion test failed"<<endl;
+    retrun false;
+  }
+  temp = domHead
+  temp2 = temp;
+  temp2 = temp2->get_link();
+  while(temp2!=nullptr)
+  {
+    if((compareResearchScore(temp, temp2) == 2)||((compareResearchScore(temp, temp2) == 3) && (compareCGPA(temp, temp2 == 2)))||((compareResearchScore(temp, temp2))&&(compareCGPA(temp, temp2))&&(compareLocation(temp, temp2))))
+    {
+      cerr<<"Insertion test failed"<<endl;
+      return false;
+    }
+    temp = temp2; // both temp and temp2 traverse the list at the same time, but temp2 is one node ahead
+    temp2 = temp2->get_link();
+  }
+  cout<<"Passed insertion test"<<endl;
+  cout<<"Testing the illegal case"<<endl;
+  studentPtr illDom = new DomesticStudent("Lucy", "Pevensie", 4.00, 90, stu_num + 20200000);
+  insert((search(domHead, illDom, sortDom)), domHead, domTail, illDom, sortDom);
+  if(head == NULL)
+  {
+    cerr<<"Insertion test failed"<<endl;
+    retrun false;
+  }
+  temp = domHead
+  temp2 = temp;
+  temp2 = temp2->get_link();
+  while(temp2!=nullptr)
+  {
+    if((compareResearchScore(temp, temp2) == 2)||((compareResearchScore(temp, temp2) == 3) && (compareCGPA(temp, temp2 == 2)))||((compareResearchScore(temp, temp2))&&(compareCGPA(temp, temp2))&&(compareLocation(temp, temp2))))
+    {
+      cerr<<"Insertion test failed"<<endl;
+      return false;
+    }
+    temp = temp2; // both temp and temp2 traverse the list at the same time, but temp2 is one node ahead
+    temp2 = temp2->get_link();
+  }
 
-		}
-		else
-		{
-			choice = 'H';
-			return temp;
-		}
-	}
-  while()
-  make a linked list
-  insert(teststu linkedlist)
-  if the list is not orginised properly, cerr
-
-
+  return true;
 }
 void test
