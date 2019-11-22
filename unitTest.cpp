@@ -191,10 +191,36 @@ void testInsertDom(studentPtr domhead, studentPtr domtail, int stu_num)
   cout<<"Testing the normal case"<<endl;
   studentPtr inDom = new DomesticStudent("Lucy", "Pevensie", 4.00, 90, stu_num + 20200000, "BC");
   insert((search(domHead, inDom, sortDom)), domHead, domTail, inDom, sortDom);
+  while()
+  if (compareResearchScore(temp, newnode) == 2 || compareResearchScore(temp, newnode) == 3) { // this checks if the new node has priority over the head node. If it does, we need to set a new head
+		if (compareResearchScore(temp, newnode) == 3)
+		{
+			if (compareCGPA(temp, newnode) == 3)
+			{
+				if (compareLocation(temp, newnode) == 2)
+				{
+					choice = 'H';
+					return temp;
+				}
+			}
+			else if (compareCGPA(temp, newnode) == 2)
+			{
+				choice = 'H';
+				return temp;
+			}
+
+		}
+		else
+		{
+			choice = 'H';
+			return temp;
+		}
+	}
+  while()
   make a linked list
   insert(teststu linkedlist)
   if the list is not orginised properly, cerr
 
 
 }
-
+void test
