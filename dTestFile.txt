@@ -1,0 +1,10 @@
+FirstName,LastName,Province,CGPA,ResearchScore
+Mary,White,BC,4.00,85
+Mike,Hwang,ON,3.70,90
+Liam,Edwards,AB,4.33,70
+Noah,Collins,BC,4.20,71
+William,Stewart,MB,4.10,72
+James,Sanchez,NB,4.00,73
+Oliver,Morris,NL,3.90,74
+Benjamin,Rogers,NT,3.80,75
+Elijah,Reed,NS,3.70,76

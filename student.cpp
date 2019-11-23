@@ -7,6 +7,7 @@
 #include <string>
 #include <cctype>
 #include <algorithm>
+#include <typeinfo>
 
 using namespace std;
 
@@ -643,7 +644,10 @@ studentPtr monosearch(studentPtr &head, studentPtr &newnode, char& choice) // Fu
 	studentPtr temp2 = nullptr;
 
 	temp = head;
-
+	if(typeid(*head).name() != typeid(*newnode).name()){
+		cerr<<"The new node is not the right datatype"<<endl;
+		return new DomesticStudent();
+	}
 	if (temp != nullptr) { // First check if the list is empty or only has one node
 		temp2 = temp->get_link(); // Our implementation always has 2 pointers - one(temp2) for testing to see where to sort and one to send to the insert(temp)
 	}
@@ -970,14 +974,6 @@ string Student::get_location() const
 {
 	return location;
 }
-string DomesticStudent::type() const
-{
-	return "DomesticStudent";
-}
-string Student::type() const
-{
-	return "Student";
-}
 
 void InternationalStudent::set_location(string place) // International class virtual functions of location, sets and gets country instead of location
 {
@@ -999,10 +995,6 @@ void InternationalStudent::set_location(string place) // International class vir
 string InternationalStudent::get_location() const
 {
 	return country;
-}
-string InternationalStudent::type() const
-{
-	return "InternationalStudent";
 }
 
 void merge( studentPtr domlist,  studentPtr intlist, studentPtr &Head, studentPtr &Tail) {

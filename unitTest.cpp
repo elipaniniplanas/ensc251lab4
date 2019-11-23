@@ -7,20 +7,26 @@
 #include "student.hpp"
 #include<stdio.h>
 
-void testInsert();
-void testSearch()
-
+void testInsert(studentPtr, studentPtr, int) const;
+void testSearchData();
+void testSearchName();
+void testDeleteSearch();
+void testDeleteEnds();
+void testMerge();
+void testSearchMerge();
 
 int main()
 {
-  char searchchoice;
+  char retry;
+  string userin;
   string line;
+  int stu_num;
 	ifstream domesticFile("domestic-stu.txt");
 	if (!domesticFile.is_open()) {
 		cout << "Unable to open file domestic-stu.txt" << endl;
 		return -1;
 	}
-  while (getline(domesticFile, line)) {
+  while (getline(dTestFile, line)) {
 		if(checklineD(line))
 		{
 		return -1;
@@ -46,8 +52,7 @@ int main()
 		stu_count++;
 		stu_num++;
 	}
-	domesticFile.close();
-  int userIn1;
+	dTestFile.close();
   while (getline(iTestFile, line)) {
 		if(checklineI(line))
  		{
@@ -89,142 +94,59 @@ int main()
 		stu_num++;
 		stu_count++;
 	}
+  iTestFile.close();
 
-  cout<<"Select which funciton to be tested:\n[1] Insert\n[2] Search\n[3] Delete\n[4] Merge & Search"<<endl;
-  cin>>userIn1;
-  if(userIn1<=0 || userIn1>4)
-  {
-			cerr << "ERROR: Please select a proper option" << endl;
-			userIn1 = 0;
-			continue;
-  }
-  else if (userIn1 == 4)
-  {
-    testMerge();
-    break;
-  }
-  else if (userIn1 == 3)
-  {
-    while(deletechoice == 'y'|| deletechoice == 'Y')
-    {
-      int userIn2;
-      cout << "Select which delete function to be tested:\n[1] Delete head and tail nodes\n[2] Delete students based on a name" << endl;
-      cin>>userIn2;
-      if(userIn2<=0 || userIn2>2)
-      {
-        cerr << "ERROR: Please select a proper option" << endl;
-        userIn1 = 0;
-        continue;
-      }
-      // search function
-      if (userIn2 == 1)
-      {
-        testdeletestudent();
-      }
-      else if (userIn2 == 2)
-      {
-        cout << "Please enter the first name you would like to find"<< endl;
-        cin >> firstname;
-        cout << "Please enter the last name you would like to find"<< endl;
-        cin >> lastname;
 
-        testdeleteSearch();
-      }
-      cout << endl;
-      cout << "would you like to test delete again?"<<endl;
-      cout << "press y to test" << endl;
-      cin >> deletechoice;
+  do {
+    cout<<"Test the insert funciton? [Y] yes, [Anything else] no"<<endl;
+    cin>>userin;
+    if(userin == "y" || userin == "Y")
+      testInsert();
+    userin = "p";
+    cout<<"Test the search by data funcitons? [Y] yes, [Anything else] no"<<endl;
+    cin>>userin;
+    if(userin == "y" || userin == "Y")
+      testSearchData();
+    userin = "p";
+    cout<<"Test the search by name funcitons? [Y] yes, [Anything else] no"<<endl;
+    cin>>userin;
+    if(userin == "y" || userin == "Y")
+      testSearchName();
+    userin = "p";
+    cout<<"Test the delete student funciton? [Y] yes, [Anything else] no"<<endl;
+    cin>>userin;
+    if(userin == "y" || userin == "Y")
+      testDeleteSearch();
+    userin = "p";
+    cout<<"Test the delete head and tail funciton? [Y] yes, [Anything else] no"<<endl;
+    cin>>userin;
+    if(userin == "y" || userin == "Y")
+      testDeleteEnds();
+    userin = "p";
+    cout<<"Test the merge funciton? [Y] yes, [Anything else] no"<<endl;
+    cin>>userin;
+    if(userin == "y" || userin == "Y")
+      testMerge();
+    userin = "p";
+    cout<<"Test the search merge funciton? [Y] yes, [Anything else] no"<<endl;
+    cin>>userin;
+    if(userin == "y" || userin == "Y")
+      testSearchMerge();
+    cout<<"Perform the unit test again? [Y] yes, [Anything else] no"<<endl;
+    cin>>retry;
+  } while(retry == "y");
 
-      if (deletechoice != 'y' && deletechoice != 'Y')
-      {
-        break;
-      }
-      else
-      {
-        cout << endl;
-        continue;
-      }
-    }
-
-  }
-  else if (userIn1 == 2)
-  {
-  while(searchchoice == 'y'|| searchchoice == 'Y')
-    {
-      cout << "what kind of search would you like to do? "<< endl;
-      cout << "[N] Full Name " << endl;
-      cout << "[C] CGPA" << endl << "[R] Research Score " << endl;
-      cout << "[I] Student ID" << endl;
-
-      cout << "Choice: " << endl;
-      cin >> userIn3;
-      if (userIn3 != 'n' && userIn3 != 'N' && userIn3 != 'c' && userIn3 != 'C' && userIn3 != 'r' && userIn3 != 'R' && userIn3 != 'I' && userIn3 != 'i' || cin.peek() != '\n')
-      {
-        cerr << "ERROR: Please select a proper searching category" << endl;
-        userIn3 = 'p';
-        continue;
-      }
-      // SEARCH FUNCTIONS
-
-      if (searchType == 'I' || searchType == 'i')
-      {
-        cout << "Please enter the ID you would like to find" << endl;
-        cin >> idChoice;
-        testsearchID();
-      }
-      else if (searchType == 'c' || searchType == 'C')
-      {
-        cout << "Please enter the CGPA you would like to find" << endl;
-        cin >> cgpaChoice;
-        testsearchCGPA();
-      }
-      else if (searchType == 'r' || searchType == 'R')
-      {
-        cout << "Please enter the research score you would like to find" << endl;
-        cin >> rChoice;
-        testsearchReScore();
-      }
-      else if (searchType == 'n' || searchType == 'N')
-      {
-        cout << "Please enter the first name you would like to find" << endl;
-        cin >> firstname;
-        cout << endl;
-        cout << "Please enter the last name you would like to find" << endl;
-        cin >> lastname;
-        cout << endl;
-
-        testsearchName();
-      }
-
-      cout << endl;
-      cout << "Would you like to search again?" << endl;
-      cout << "press 'y' to search again:  ";
-      cin >> searchchoice;
-
-      if (searchchoice != 'y' && searchchoice != 'Y')
-      {
-        break;
-      }
-      else
-      {
-        cout << endl;
-        continue;
-      }
-    }
-  }
-  else if (userIn1 == 1)
-  {
-    testinsert();
-  }
   return 0;
 }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool testInsertDom(studentPtr domhead, studentPtr domtail, int stu_num)
+void testInsertDom(studentPtr domhead, studentPtr domtail, int stu_num) const
 {
+  studentPtr sortInt, sortDom;
   cout<<"Testing the normal case"<<endl;
   studentPtr inDom = new DomesticStudent("Lucy", "Pevensie", 4.00, 90, stu_num + 20200000, "BC");
-  insert((search(domHead, inDom, sortDom)), domHead, domTail, inDom, sortDom);
+  insert((monosearch(domHead, inDom, sortDom)), domHead, domTail, inDom, sortDom);
   if(head == NULL)
   {
     cerr<<"Insertion test failed"<<endl;
@@ -243,9 +165,55 @@ bool testInsertDom(studentPtr domhead, studentPtr domtail, int stu_num)
     temp = temp2; // both temp and temp2 traverse the list at the same time, but temp2 is one node ahead
     temp2 = temp2->get_link();
   }
-  cout<<"Passed insertion test"<<endl;
+  cout<<"Passed normal case insertion test"<<endl;
   cout<<"Testing the illegal case"<<endl;
-  studentPtr illDom = new DomesticStudent("Lucy", "Pevensie", 4.00, 90, stu_num + 20200000);
+  studentPtr illDom = new InternationalStudent("Div", "Yam", 4.00, 90, stu_num + 20200000, "Idian", 24, 25, 29, 26);
+  stu_num++;
+  insert((monosearch(domHead, illDom, sortDom)), domHead, domTail, illDom, sortDom);
+  if(head == NULL)
+  {
+    cerr<<"Insertion test failed"<<endl;
+    retrun false;
+  }
+  temp = domHead
+  temp2 = temp;
+  temp2 = temp2->get_link();
+  while(temp2!=nullptr)
+  {
+    if((compareResearchScore(temp, temp2) == 2)||((compareResearchScore(temp, temp2) == 3) && (compareCGPA(temp, temp2 == 2)))||((compareResearchScore(temp, temp2))&&(compareCGPA(temp, temp2))&&(compareLocation(temp, temp2))))
+    {
+      cerr<<"Insertion test failed"<<endl;
+      return false;
+    }
+    temp = temp2; // both temp and temp2 traverse the list at the same time, but temp2 is one node ahead
+    temp2 = temp2->get_link();
+  }
+  cout<<"Passed illegal case insertion test"<<endl;
+  cout<<"Testing the border case #1"<<endl;
+  studentPtr illDom = new DomesticStudent("Susan", "Pevensie", 4.00, 100, stu_num + 20200000, "BC");
+  stu_num++;
+  insert((monosearch(domHead, illDom, sortDom)), domHead, domTail, illDom, sortDom);
+  if(head == NULL)
+  {
+    cerr<<"Insertion test failed"<<endl;
+    retrun false;
+  }
+  temp = domHead
+  temp2 = temp;
+  temp2 = temp2->get_link();
+  while(temp2!=nullptr)
+  {
+    if((compareResearchScore(temp, temp2) == 2)||((compareResearchScore(temp, temp2) == 3) && (compareCGPA(temp, temp2 == 2)))||((compareResearchScore(temp, temp2))&&(compareCGPA(temp, temp2))&&(compareLocation(temp, temp2))))
+    {
+      cerr<<"Insertion test failed"<<endl;
+      return false;
+    }
+    temp = temp2; // both temp and temp2 traverse the list at the same time, but temp2 is one node ahead
+    temp2 = temp2->get_link();
+  }
+  cout<<"Passed border case #1 insertion test"<<endl;
+  cout<<"Testing the border case #2"<<endl;
+  studentPtr illDom = new DomesticStudent("Edward", "Pevensie", 4.00, 0, stu_num + 20200000);
   insert((search(domHead, illDom, sortDom)), domHead, domTail, illDom, sortDom);
   if(head == NULL)
   {
@@ -265,7 +233,19 @@ bool testInsertDom(studentPtr domhead, studentPtr domtail, int stu_num)
     temp = temp2; // both temp and temp2 traverse the list at the same time, but temp2 is one node ahead
     temp2 = temp2->get_link();
   }
+  cout<<"Passed border case #2 insertion test"<<endl;
 
   return true;
 }
-void test
+void testSearchData()
+{}
+void testSearchName()
+{}
+void testDeleteSearch()
+{}
+void testDeleteEnds()
+{}
+void testMerge()
+{}
+void testSearchMerge()
+{}
