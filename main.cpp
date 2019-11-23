@@ -5,6 +5,7 @@
 #include <sstream> //formatted string processing
 #include <cstdlib> //atof and atoi
 #include <iomanip>
+#include <cstddef>
 #include "student.hpp"
 #include<stdio.h>
 
